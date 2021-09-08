@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SnapmintMerchantApp</string>
+
+    <string name="enter_phone_number">Phone Number</string>
+</resources>
