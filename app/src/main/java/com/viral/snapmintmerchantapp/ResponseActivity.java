@@ -60,9 +60,9 @@ public class ResponseActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        String validatedChecksum = "";
-        validatedChecksum = Helper.validateChecksum(status, checkSum);
-
-        checksum_response.setText(validatedChecksum);
+//        String validatedChecksum = "";
+//        validatedChecksum = Helper.validateChecksum(status, checkSum);
+//
+//        checksum_response.setText(validatedChecksum);
     }
 }
