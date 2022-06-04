@@ -5,4 +5,6 @@
     <color name="colorAccent">#D81B60</color>
 
     <color name="dashboard_bg">#D0D0D0</color>
+    <color name="color_title">#6d6e71</color>
+    <color name="color_input">#231f20</color>
 </resources>

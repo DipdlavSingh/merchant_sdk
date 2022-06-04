@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="layout_title">24sp</dimen>
+    <dimen name="layout_content">16sp</dimen>
+    <dimen name="layout_content_small">14sp</dimen>
+    <dimen name="layout_content_small_cb">11sp</dimen>
+
+    <dimen name="dip24">24dp</dimen>
+    <dimen name="txt_size_small">10sp</dimen>
+</resources>

@@ -13,7 +13,7 @@ public class Helper {
         String checkSumString = "";
 //        Log.v(TAG, "Message Received : " + message);
 //        message = "b56e0b7dbc40608e9821a9f11aa5a47e78381afde37f61870451620";//For Testing Invalid
-
+//        merchant_key|order_id|order_value|full_name|email|token
         if (status.equalsIgnoreCase("success"))
             checkSumString = "VFmRKCgU|success|1|2000|GIRIDHAR m MAMIDIPALLY|rahul@snapmint.com|y9A2reJs";
         else
@@ -29,7 +29,7 @@ public class Helper {
         return checkSum;
     }
 
-    private static String generateCheckSum(String checkSumString) {
+    public static String generateCheckSum(String checkSumString) {
 
         String generatedCheckSum = "";
         MessageDigest messageDigest = null;
@@ -47,6 +47,6 @@ public class Helper {
         }
 
 //        Log.v(TAG, "Created Checksum : " + stringBuilder);
-        return generatedCheckSum;
+        return stringBuilder.toString();
     }
 }
