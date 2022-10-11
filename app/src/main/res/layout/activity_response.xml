@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SNAPMINT RESPONSE"
+            android:layout_gravity="center_horizontal"
+            android:padding="16dp"
+            android:textSize="16dp"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_checksum_respose_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Checksum : "
+                    android:layout_gravity="center_horizontal"
+                    android:padding="16dp"/>
+
+                <TextView
+                    android:id="@+id/tv_checksum_response"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Valid/Invalid"
+                    android:layout_toRightOf="@id/tv_checksum_respose_label"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="16dp"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_response_code_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Response Code : "
+                    android:layout_gravity="center_horizontal"
+                    android:padding="16dp"/>
+
+                <TextView
+                    android:id="@+id/tv_response_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Response Code"
+                    android:layout_toRightOf="@id/tv_response_code_label"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="16dp"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_response_message_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Response Message : "
+                    android:layout_gravity="center_horizontal"
+                    android:padding="16dp"/>
+
+                <TextView
+                    android:id="@+id/tv_response_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Response Message"
+                    android:layout_toRightOf="@id/tv_response_message_label"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="16dp"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
