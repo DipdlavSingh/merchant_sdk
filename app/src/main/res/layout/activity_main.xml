@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:orientation="vertical">
+
+        <com.snapmint.merchantsdk.components.SnapmintEmiInfoButton
+            android:id="@+id/snapmintButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_mobile_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mobile*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_phone_no"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Phone Number"
+            android:inputType="number"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_merchant_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Merchant Id*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_merchant_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Merchant ID"
+            android:inputType="number"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_merchant_key"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Merchant Key*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_merchant_key"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Merchant Key"
+            android:inputType="number"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_merchant_token"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Merchant Token*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_merchant_token"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Merchant Token"
+            android:inputType="number"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_store_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Store Id*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_store_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Store ID"
+            android:inputType="number"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_order_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Order Id*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_order_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Order ID"
+            android:inputType="number"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_order_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Order Value*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_order_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Order Value"
+            android:inputType="number"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_merchant_confirmation_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Merchant Confirmation URL*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_merchant_confirmation_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Merchant Confirmation URL"
+            android:inputType="text"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_merchant_failure_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Merchant Failure Url*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_merchant_failure_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Merchant Failure Url"
+            android:inputType="text"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_full_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Full Name*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_full_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Full Name"
+            android:inputType="text"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Email*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Email"
+            android:inputType="text"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <!-- BILLING Address -->
+
+        <TextView
+            android:id="@+id/tv_billing_full_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Billing Full Name*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_billing_full_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Billing Full Name"
+            android:inputType="number"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_billing_address_line1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Billing Address Line1*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_billing_address_line1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Billing Address Line1"
+            android:inputType="number"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_billing_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Billing City*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_billing_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Billing City"
+            android:inputType="textCapWords"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_billing_zip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Billing Zip*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_billing_zip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Billing Zip"
+            android:inputType="number"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <!-- BILLING Address -->
+
+        <TextView
+            android:id="@+id/tv_shipping_full_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Shipping Full Name*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_shipping_full_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Shipping Full Name"
+            android:inputType="number"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_shipping_address_line1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Shipping Address Line1*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_shipping_address_line1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Shipping Address Line1"
+            android:inputType="number"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_shipping_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Shipping City*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_shipping_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Shipping City"
+            android:inputType="textCapWords"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_shipping_zip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Shipping Zip*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_shipping_zip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Shipping Zip"
+            android:inputType="number"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <!-- Product In Cart -->
+
+        <TextView
+            android:id="@+id/tv_sku"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="SKU*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_sku"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter SKU"
+            android:inputType="text"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_unit_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Unit Price*"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_unit_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Unit Price"
+            android:inputType="number"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <TextView
+            android:id="@+id/tv_quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Quantity"
+            android:textColor="@color/color_title"
+            android:textSize="@dimen/layout_content" />
+
+        <EditText
+            android:id="@+id/et_quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Enter Quantity"
+            android:inputType="number"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <Button
+            android:id="@+id/btn_check_out"
+            style="@style/Base.Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="Success Check Out" />
+
+        <Button
+            android:id="@+id/btn_invalid_data"
+            style="@style/Base.Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Failed Check Out"
+            android:visibility="invisible" />
+
+    </LinearLayout>
+
+
+</ScrollView>
