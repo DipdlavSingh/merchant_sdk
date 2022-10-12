@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -23,27 +24,17 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_500_medium"
                 android:textColor="@color/black"
-                android:textSize="12sp" />
-
-<!--            <TextView-->
-<!--                android:id="@+id/tvAmount"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="1.2dp"-->
-<!--                android:fontFamily="@font/inter_bold_700"-->
-<!--                android:includeFontPadding="false"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textSize="12sp" />-->
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tvPaymentText2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
-                android:fontFamily="@font/inter_bold_700"
+                android:fontFamily="@font/inter_800_extra_bold"
                 android:includeFontPadding="false"
                 android:textColor="@color/black"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tvPaymentText3"
@@ -51,46 +42,91 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_500_medium"
                 android:textColor="@color/black"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tvPaymentText4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_bold_700"
+                android:fontFamily="@font/inter_800_extra_bold"
                 android:includeFontPadding="false"
                 android:textColor="@color/black"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/ivSnapmint"
-                android:layout_width="90dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp" />
+                android:layout_width="87dp"
+                android:layout_height="26dp"
+                android:layout_marginStart="5dp"
+                android:contentDescription="@null" />
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
 
             <TextView
                 android:id="@+id/tvCredit"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toStartOf="@+id/ivReadMore"
                 android:fontFamily="@font/inter_500_medium"
                 android:textColor="@color/grey"
-                android:textSize="10sp" />
+                android:textSize="11sp"
+                tools:ignore="SmallSp" />
 
             <ImageView
                 android:id="@+id/ivReadMore"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
+                android:layout_width="70dp"
+                android:layout_height="25dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:layout_marginStart="5dp" />
+                android:layout_marginStart="5dp"
+                android:contentDescription="@null" />
 
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llOfferView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvFlatOffer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_800_extra_bold"
+            android:textColor="@color/red" />
+
+        <TextView
+            android:id="@+id/tvCashbackUpTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:fontFamily="@font/inter_800_extra_bold"
+            android:textColor="@color/red" />
+
+        <TextView
+            android:id="@+id/tvTnc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_500_medium"
+            android:text="@string/t_and_c"
+            android:layout_marginStart="1dp"
+            android:textColor="@color/black"
+            android:textSize="10sp"
+            android:textStyle="italic"
+            tools:ignore="SmallSp" />
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/llDisableView"
@@ -102,7 +138,8 @@
         <ImageView
             android:id="@+id/ivSnapmintLogo"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:contentDescription="@null" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -112,12 +149,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:id="@+id/ivSnapmintText"
                     android:layout_width="50dp"
-                    android:layout_height="20dp" />
+                    android:layout_height="20dp"
+                    android:contentDescription="@null" />
 
                 <TextView
                     android:id="@+id/tvDisableText1"
@@ -159,11 +198,11 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_500_medium"
                 android:textColor="@color/black"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                tools:ignore="SmallSp" />
 
         </LinearLayout>
 
     </LinearLayout>
-
 
 </LinearLayout>

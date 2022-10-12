@@ -2,6 +2,8 @@ package com.snapmint.merchantsdk.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.snapmint.merchantsdk.constants.AppConstants;
+import com.snapmint.merchantsdk.constants.SnapmintConfiguration;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +20,8 @@ public class ApiBuilder {
     private static int cacheSize = 10 * 1024 * 1024; // 10 MB
 
     public static <T> T create(final Class<T> serviceInterface) {
+        String baseUrl;
+        SnapmintConfiguration snapmintConfiguration = new SnapmintConfiguration();
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().
@@ -28,7 +32,7 @@ public class ApiBuilder {
         Gson gson = new GsonBuilder().create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://preemi.snapmint.com/")
+                .baseUrl(AppConstants.BASE_URL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
