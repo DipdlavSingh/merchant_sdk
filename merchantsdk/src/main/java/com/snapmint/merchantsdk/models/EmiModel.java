@@ -1,5 +1,6 @@
 package com.snapmint.merchantsdk.models;
 
+import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
 public class EmiModel{
@@ -25,6 +26,9 @@ public class EmiModel{
 	@SerializedName("pay_now_text1_part4")
 	private String payNowText1Part4;
 
+	@SerializedName("terms_and_conditions_subtitle")
+	private String termsAndConditionsSubtitle;
+
 	@SerializedName("emi_one_percentage")
 	private String emiOnePercentage;
 
@@ -40,8 +44,23 @@ public class EmiModel{
 	@SerializedName("emi_rates_percentage_pop_up_disable")
 	private String emiRatesPercentagePopUpDisable;
 
+	@SerializedName("terms_and_conditions_snapmint_logo")
+	private String termsAndConditionsSnapmintLogo;
+
 	@SerializedName("pay_now_text4_pop_up_disable")
 	private String payNowText4PopUpDisable;
+
+	@SerializedName("offer_percentage")
+	private String offerPercentage;
+
+	@SerializedName("available_offer")
+	private String availableOffer;
+
+	@SerializedName("offer_terms_and_conditions")
+	private List<String> offerTermsAndConditions;
+
+	@SerializedName("terms_and_conditions_title")
+	private String termsAndConditionsTitle;
 
 	@SerializedName("pay_now_text3")
 	private String payNowText3;
@@ -54,6 +73,14 @@ public class EmiModel{
 
 	@SerializedName("pay_now_text2")
 	private String payNowText2;
+
+	public String getOfferPercentage() {
+		return offerPercentage;
+	}
+
+	public void setOfferPercentage(String offerPercentage) {
+		this.offerPercentage = offerPercentage;
+	}
 
 	public void setPayNowImage1PopUpDisable(String payNowImage1PopUpDisable){
 		this.payNowImage1PopUpDisable = payNowImage1PopUpDisable;
@@ -111,6 +138,14 @@ public class EmiModel{
 		return payNowText1Part4;
 	}
 
+	public void setTermsAndConditionsSubtitle(String termsAndConditionsSubtitle){
+		this.termsAndConditionsSubtitle = termsAndConditionsSubtitle;
+	}
+
+	public String getTermsAndConditionsSubtitle(){
+		return termsAndConditionsSubtitle;
+	}
+
 	public void setEmiOnePercentage(String emiOnePercentage){
 		this.emiOnePercentage = emiOnePercentage;
 	}
@@ -151,12 +186,44 @@ public class EmiModel{
 		return emiRatesPercentagePopUpDisable;
 	}
 
+	public void setTermsAndConditionsSnapmintLogo(String termsAndConditionsSnapmintLogo){
+		this.termsAndConditionsSnapmintLogo = termsAndConditionsSnapmintLogo;
+	}
+
+	public String getTermsAndConditionsSnapmintLogo(){
+		return termsAndConditionsSnapmintLogo;
+	}
+
 	public void setPayNowText4PopUpDisable(String payNowText4PopUpDisable){
 		this.payNowText4PopUpDisable = payNowText4PopUpDisable;
 	}
 
 	public String getPayNowText4PopUpDisable(){
 		return payNowText4PopUpDisable;
+	}
+
+	public void setAvailableOffer(String availableOffer){
+		this.availableOffer = availableOffer;
+	}
+
+	public String getAvailableOffer(){
+		return availableOffer;
+	}
+
+	public void setOfferTermsAndConditions(List<String> offerTermsAndConditions){
+		this.offerTermsAndConditions = offerTermsAndConditions;
+	}
+
+	public List<String> getOfferTermsAndConditions(){
+		return offerTermsAndConditions;
+	}
+
+	public void setTermsAndConditionsTitle(String termsAndConditionsTitle){
+		this.termsAndConditionsTitle = termsAndConditionsTitle;
+	}
+
+	public String getTermsAndConditionsTitle(){
+		return termsAndConditionsTitle;
 	}
 
 	public void setPayNowText3(String payNowText3){
