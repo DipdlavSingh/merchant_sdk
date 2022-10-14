@@ -96,10 +96,13 @@ public class SnapmintEmiInfoButton extends FrameLayout implements View.OnClickLi
         this.isEnable = iEnable;
         if (environment.equalsIgnoreCase(SnapmintConfiguration.QA)) {
             AppConstants.BASE_URL = AppConstants.QA;
+            AppConstants.CHECKOUT_BASE_URL = AppConstants.QA_CHECKOUT_URL;
         } else if (environment.equalsIgnoreCase(SnapmintConfiguration.PRE)) {
             AppConstants.BASE_URL = AppConstants.PRE;
+            AppConstants.CHECKOUT_BASE_URL = AppConstants.PRE_CHECKOUT_URL;
         } else if (environment.equalsIgnoreCase(SnapmintConfiguration.PROD)) {
             AppConstants.BASE_URL = AppConstants.PROD;
+            AppConstants.CHECKOUT_BASE_URL = AppConstants.PROD_CHECKOUT_URL;
         }
         try {
             getEmiInfo();
