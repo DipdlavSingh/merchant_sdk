@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
@@ -18,6 +20,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebChromeClient.FileChooserParams;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -31,6 +34,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.snapmint.merchantsdk.JSBridge.WebAppInterface;
 import com.snapmint.merchantsdk.constants.ApiConstant;
+import com.snapmint.merchantsdk.constants.AppConstants;
 import com.snapmint.merchantsdk.utils.WebViewClientImpl;
 
 import java.io.File;
@@ -102,7 +106,8 @@ public class MainActivity extends AppCompatActivity {
         webView.addJavascriptInterface(new WebAppInterface(MainActivity.this), "Android");
 
         if (option_clicked.equals("check_out")) {
-            webView.postUrl(ApiConstant.BASE_URL,PostData.getBytes());
+            Log.d("CheckoutUrl", AppConstants.CHECKOUT_BASE_URL);
+            webView.postUrl(AppConstants.CHECKOUT_BASE_URL,PostData.getBytes());
         }
 
         setContentView(webView);
@@ -259,52 +264,53 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent intent) {
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
-            if (requestCode == REQUEST_SELECT_FILE)
-            {
-                if (uploadMessage == null)
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+            if (requestCode == REQUEST_SELECT_FILE) {
+                if (uploadMessage == null) {
                     return;
+                }
 
-                Log.v(this.getClass().getName(), "Sandip Image Uri : "+this.imageUri);
+                Log.v(this.getClass().getName(), "Sandip Image Uri : " + this.imageUri);
 
                 Intent i = new Intent();
                 Uri result;
                 if (resultCode != RESULT_OK) {
                     result = null;
                 } else {
-                    if (intent == null){
-                        try{
+                    if (intent == null) {
+                        try {
                             i.setData(this.imageUri);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
 
                     }
-                    intent = intent == null ? i : intent; // retrieve from the private variable if the intent is null
+                    intent = intent == null ? i
+                        : intent; // retrieve from the private variable if the intent is null
                 }
 
-                uploadMessage.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, intent));
+                uploadMessage.onReceiveValue(FileChooserParams.parseResult(resultCode, intent));
                 uploadMessage = null;
 
                 Log.v(this.getClass().getName(), "Sandip Upload Image REQUEST_SELECT_FILE");
             }
-        }
-        else if (requestCode == FILECHOOSER_RESULTCODE)
-        {
-            if (null == mUploadMessage)
+        } else if (requestCode == FILECHOOSER_RESULTCODE) {
+            if (null == mUploadMessage) {
                 return;
+            }
             // Use MainActivity.RESULT_OK if you're implementing WebView inside Fragment
             // Use RESULT_OK only if you're implementing WebView inside an Activity
-            Uri result = intent == null || resultCode != MainActivity.RESULT_OK ? null : intent.getData();
+            Uri result =
+                intent == null || resultCode != MainActivity.RESULT_OK ? null : intent.getData();
             mUploadMessage.onReceiveValue(result);
             mUploadMessage = null;
 
             Log.v(this.getClass().getName(), "Sandip Upload Image FILECHOOSER_RESULTCODE");
 
-        }
-        else
+        } else {
             Toast.makeText(MainActivity.this, "Failed to Upload Image", Toast.LENGTH_LONG).show();
+        }
     }
 
     public static void verifyStoragePermissions(Activity activity) {
