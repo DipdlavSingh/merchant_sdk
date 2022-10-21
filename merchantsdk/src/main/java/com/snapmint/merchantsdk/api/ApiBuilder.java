@@ -2,7 +2,7 @@ package com.snapmint.merchantsdk.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.snapmint.merchantsdk.constants.AppConstants;
+import com.snapmint.merchantsdk.constants.SnapmintConstants;
 import com.snapmint.merchantsdk.constants.SnapmintConfiguration;
 
 import java.util.concurrent.TimeUnit;
@@ -32,7 +32,7 @@ public class ApiBuilder {
         Gson gson = new GsonBuilder().create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(AppConstants.BASE_URL)
+                .baseUrl(SnapmintConstants.BASE_URL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();

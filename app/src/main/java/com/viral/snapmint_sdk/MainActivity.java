@@ -5,16 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.snapmint.merchantsdk.components.SnapmintEmiInfoButton;
-import com.snapmint.merchantsdk.constants.AppConstants;
+import com.snapmint.merchantsdk.constants.SnapmintConstants;
 import com.snapmint.merchantsdk.constants.SnapmintConfiguration;
 import com.viral.snapmint_sdk.utils.Helper;
 import com.viral.snapmint_sdk.utils.ResponseObject;
@@ -30,6 +32,23 @@ public class MainActivity extends AppCompatActivity {
     EditText shippingFullNameEdt, shippingAddressLIne1Edt, shippingCityEdt, shippingZipEdt;
     EditText proSKUEdt, unitPriceEdt, quantityEdt;
     ResponseObject responseObject;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+       try {
+           if (requestCode == SnapmintConfiguration.SNAPMINT_PAYMENT) {
+               if(data.getStringExtra(SnapmintConfiguration.STATUS).equalsIgnoreCase(SnapmintConfiguration.SUCCESS)){
+                   Toast.makeText(this, "Payment Success", Toast.LENGTH_SHORT).show();
+               }else{
+                   Toast.makeText(this, "Payment Failed", Toast.LENGTH_SHORT).show();
+               }
+               Log.e("TAG", "onActivityResult: "+data );
+           }else{
+
+           }
+       }catch (Exception ignored){}
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,12 +111,12 @@ public class MainActivity extends AppCompatActivity {
                         data2 = data2 + "&checksum_hash=" + checkSumStr;
 
                         String finalData = data1 + phoneNumber + data2;
-                        Intent intent = new Intent(MainActivity.this, com.snapmint.merchantsdk.snapmintsdk.MainActivity.class);
+                        Intent intent = new Intent(MainActivity.this, com.snapmint.merchantsdk.snapmintsdk.SnapmintOrderCheckoutActivity.class);
                         //intent.putExtra("data", "utf8=?&co_source=sdk&authenticity_token=jnpr0Kea3obVQyC5N6OAVKA8rmdbfxCyGFADxGP8LT8hxltV5SCARcigKyZD6Ix/NRv8S8YiqGPwofAj3qrSrw==&source=&user_type=old_user&mobile=6547989250&merchant_id=1&store_id=1&order_id=1&order_value=20000&merchant_confirmation_url=uat.sodelsolutions.com/magento/magento/success&merchant_failure_url=uat.sodelsolutions.com/magento/magento/failed&shipping_fees=10000&udf1=test&udf2=test&udf3=test&full_name=GIRIDHAR+m+MAMIDIPALLY&email=rahul@snapmint.com&billing_first_name=GIRIDHAR&billing_middle_name=ravi&billing_last_name=MAMIDIPALLY&billing_full_name=GIRIDHAR+ravi+MAMIDIPALLY&billing_address_line1=GIRIDHAR+EVENT+ORGANRING&billing_address_line2=8-2-268/1/D/2+ROAD+NO+3&billing_city=Mumbai&billing_zip=400076&shipping_first_name=GIRIDHAR&shipping_middle_name=ravi&shipping_last_name=MAMIDIPALLY&shipping_full_name=GIRIDHAR+ravi+MAMIDIPALLY&shipping_address_line1=GIRIDHAR+EVENT+ORGANRING&shipping_address_line2=8-2-268/1/D/2+ROAD+NO+3&shipping_city=Mumbai&shipping_zip=400076&products[][sku]=abdx123&products[][name]=Product+2&products[][unit_price]=1000&products[][quantity]=5&products[][item_url]=https://google.com/test&products[][udf1]=udf1&products[][udf2]=udf2&products[][udf3]=udf3&products[][sku]=abdx123&products[][name]=Product+2&products[][unit_price]=1000&products[][quantity]=5&products[][item_url]=https://google.com/test&products[][udf1]=udf1&products[][udf2]=udf2&products[][udf3]=udf3&checksum_hash=119c97050ad1740d18afaa588bd1363b5f1e9de2b5d650d19e8bce15f1a2d71be996a3e200e313c20e3a0e72cb3aea3b33de4db7baf5c85d794bf211b8726352");
                         intent.putExtra("data", finalData);
                         intent.putExtra("option_clicked", "check_out");
                         intent.putExtra("callback", responseObject);
-                        startActivity(intent);
+                        startActivityForResult(intent,SnapmintConfiguration.SNAPMINT_PAYMENT);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -119,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void inItView() {
         SnapmintEmiInfoButton snapmintButton = findViewById(R.id.snapmintButton);
-        snapmintButton.showSnapmintEmiInfo("791", "1616/snap_ketch.json", true, SnapmintConfiguration.PROD);
+        snapmintButton.showSnapmintEmiInfo("791", "1616/snap_ketch.json", true, SnapmintConfiguration.QA);
         et_phone_no = findViewById(R.id.et_phone_no);
         merchantIdEdt = findViewById(R.id.et_merchant_id);
         merchantKeyEdt = findViewById(R.id.et_merchant_key);

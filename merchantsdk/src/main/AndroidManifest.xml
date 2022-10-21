@@ -11,6 +11,7 @@
         android:theme="@style/Theme.Snapmint_sdk">
 
         <activity android:name=".snapmintsdk.MainActivity"/>
+        <activity android:name=".snapmintsdk.SnapmintOrderCheckoutActivity"/>
 
     </application>
 

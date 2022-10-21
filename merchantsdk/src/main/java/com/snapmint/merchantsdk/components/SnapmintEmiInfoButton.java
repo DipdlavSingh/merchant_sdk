@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,7 @@ import com.snapmint.merchantsdk.R;
 import com.snapmint.merchantsdk.adapter.TermsAndConditionsAdapter;
 import com.snapmint.merchantsdk.api.ApiBuilder;
 import com.snapmint.merchantsdk.api.ApiServices;
-import com.snapmint.merchantsdk.constants.AppConstants;
+import com.snapmint.merchantsdk.constants.SnapmintConstants;
 import com.snapmint.merchantsdk.constants.SnapmintConfiguration;
 import com.snapmint.merchantsdk.models.EmiModel;
 import com.snapmint.merchantsdk.utils.Utility;
@@ -95,14 +94,14 @@ public class SnapmintEmiInfoButton extends FrameLayout implements View.OnClickLi
         this.merchantLink = merchantLink;
         this.isEnable = iEnable;
         if (environment.equalsIgnoreCase(SnapmintConfiguration.QA)) {
-            AppConstants.BASE_URL = AppConstants.QA;
-            AppConstants.CHECKOUT_BASE_URL = AppConstants.QA_CHECKOUT_URL;
+            SnapmintConstants.BASE_URL = SnapmintConstants.QA;
+            SnapmintConstants.CHECKOUT_BASE_URL = SnapmintConstants.QA_CHECKOUT_URL;
         } else if (environment.equalsIgnoreCase(SnapmintConfiguration.PRE)) {
-            AppConstants.BASE_URL = AppConstants.PRE;
-            AppConstants.CHECKOUT_BASE_URL = AppConstants.PRE_CHECKOUT_URL;
+            SnapmintConstants.BASE_URL = SnapmintConstants.PRE;
+            SnapmintConstants.CHECKOUT_BASE_URL = SnapmintConstants.PRE_CHECKOUT_URL;
         } else if (environment.equalsIgnoreCase(SnapmintConfiguration.PROD)) {
-            AppConstants.BASE_URL = AppConstants.PROD;
-            AppConstants.CHECKOUT_BASE_URL = AppConstants.PROD_CHECKOUT_URL;
+            SnapmintConstants.BASE_URL = SnapmintConstants.PROD;
+            SnapmintConstants.CHECKOUT_BASE_URL = SnapmintConstants.PROD_CHECKOUT_URL;
         }
         try {
             getEmiInfo();

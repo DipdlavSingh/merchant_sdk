@@ -34,7 +34,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.snapmint.merchantsdk.JSBridge.WebAppInterface;
 import com.snapmint.merchantsdk.constants.ApiConstant;
-import com.snapmint.merchantsdk.constants.AppConstants;
+import com.snapmint.merchantsdk.constants.SnapmintConstants;
 import com.snapmint.merchantsdk.utils.WebViewClientImpl;
 
 import java.io.File;
@@ -106,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
         webView.addJavascriptInterface(new WebAppInterface(MainActivity.this), "Android");
 
         if (option_clicked.equals("check_out")) {
-            Log.d("CheckoutUrl", AppConstants.CHECKOUT_BASE_URL);
-            webView.postUrl(AppConstants.CHECKOUT_BASE_URL,PostData.getBytes());
+            Log.d("CheckoutUrl", SnapmintConstants.CHECKOUT_BASE_URL);
+            webView.postUrl(SnapmintConstants.CHECKOUT_BASE_URL,PostData.getBytes());
         }
 
         setContentView(webView);
