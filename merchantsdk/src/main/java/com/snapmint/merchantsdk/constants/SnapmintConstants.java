@@ -1,6 +1,6 @@
 package com.snapmint.merchantsdk.constants;
 
-public class AppConstants {
+public class SnapmintConstants {
     //    QA
     public static String QA = "https://qa2.snapmint.com/";
     public static String QA_CHECKOUT_URL = "https://qaapi.snapmint.com/v1/public/online_checkout";
@@ -16,6 +16,7 @@ public class AppConstants {
 
     public static String BASE_URL = "https://emis.snapmint.com/";
     public static String CHECKOUT_BASE_URL = "https://api.snapmint.com/v1/public/online_checkout";
+
 
 
 }

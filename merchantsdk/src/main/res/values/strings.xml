@@ -24,4 +24,6 @@
     <string name="emi_plans">EMI Plans</string>
     <string name="flat_percentage">Flat %1s</string>
     <string name="t_and_c">T&amp;C</string>
+    <string name="notification_error_ssl_cert_invalid">Internal connectivity error. Do you want to continue?</string>
+    <string name="please_give_camera_permission_without_that_we_cannot">Please give camera permission without that we cannot help in uploading kyc images</string>
 </resources>
