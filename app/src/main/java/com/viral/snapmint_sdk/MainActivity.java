@@ -1,5 +1,6 @@
 package com.viral.snapmint_sdk;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,12 @@ import com.snapmint.merchantsdk.constants.SnapmintConfiguration;
 import com.viral.snapmint_sdk.utils.Helper;
 import com.viral.snapmint_sdk.utils.ResponseObject;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Random;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     EditText fullNameEdt, emailEdt, billingFullNameEdt, billingAddressLIne1Edt, billingCityEdt, billingZipEdt;
     EditText shippingFullNameEdt, shippingAddressLIne1Edt, shippingCityEdt, shippingZipEdt;
     EditText proSKUEdt, unitPriceEdt, quantityEdt;
+    EditText etBaseUrl;
     ResponseObject responseObject;
 
     @Override
@@ -69,53 +77,45 @@ public class MainActivity extends AppCompatActivity {
                 //CheckSum and All Parameter, context
 
                 if (isDataValidate()) {
-
-                    final String phoneNumber = et_phone_no.getText().toString();
-                    String data1 = "utf8=?&co_source=sdk&authenticity_token=jnpr0Kea3obVQyC5N6OAVKA8rmdbfxCyGFADxGP8LT8hxltV5SCARcigKyZD6Ix/NRv8S8YiqGPwofAj3qrSrw==&source=&user_type=old_user&mobile=";
-                    String data2 = "&merchant_id=1&store_id=1&order_id=1&order_value=2000&merchant_confirmation_url=uat.sodelsolutions.com/magento/magento/success&merchant_failure_url=uat.sodelsolutions.com/magento/magento/failed&shipping_fees=10000&udf1=test&udf2=test&udf3=test&full_name=GIRIDHAR+m+MAMIDIPALLY&email=rahul@snapmint.com&billing_first_name=GIRIDHAR&billing_middle_name=ravi&billing_last_name=MAMIDIPALLY&billing_full_name=GIRIDHAR+ravi+MAMIDIPALLY&billing_address_line1=GIRIDHAR+EVENT+ORGANRING&billing_address_line2=8-2-268/1/D/2+ROAD+NO+3&billing_city=Mumbai&billing_zip=400076&shipping_first_name=GIRIDHAR&shipping_middle_name=ravi&shipping_last_name=MAMIDIPALLY&shipping_full_name=GIRIDHAR+ravi+MAMIDIPALLY&shipping_address_line1=GIRIDHAR+EVENT+ORGANRING&shipping_address_line2=8-2-268/1/D/2+ROAD+NO+3&shipping_city=Mumbai&shipping_zip=400076&products[][sku]=abdx123&products[][name]=Product+2&products[][unit_price]=1000&products[][quantity]=5&products[][item_url]=https://google.com/test&products[][udf1]=udf1&products[][udf2]=udf2&products[][udf3]=udf3&products[][sku]=abdx123&products[][name]=Product+2&products[][unit_price]=1000&products[][quantity]=5&products[][item_url]=https://google.com/test&products[][udf1]=udf1&products[][udf2]=udf2&products[][udf3]=udf3&checksum_hash=119c97050ad1740d18afaa588bd1363b5f1e9de2b5d650d19e8bce15f1a2d71be996a3e200e313c20e3a0e72cb3aea3b33de4db7baf5c85d794bf211b8726352";
-
-                    data2 = "&merchant_id=" + merchantIdEdt.getText().toString().trim();
-                    data2 = data2 + "&store_id=" + storeIdEdt.getText().toString().trim();
-                    data2 = data2 + "&order_id=" + orderIdEdt.getText().toString().trim();
-                    data2 = data2 + "&order_value=" + orderValueEdt.getText().toString().trim();
-                    data2 = data2 + "&merchant_confirmation_url=" + merchantConfirmUrlEdt.getText().toString().trim();
-                    data2 = data2 + "&merchant_failure_url=" + merchantFailUrlEdt.getText().toString().trim();
-
-                    data2 = data2 + "&full_name=" + fullNameEdt.getText().toString().trim();
-                    data2 = data2 + "&email=" + emailEdt.getText().toString().trim();
-
-                    data2 = data2 + "&billing_full_name=" + billingFullNameEdt.getText().toString().trim();
-                    data2 = data2 + "&billing_address_line1=" + billingAddressLIne1Edt.getText().toString().trim();
-                    data2 = data2 + "&billing_city=" + billingCityEdt.getText().toString().trim();
-                    data2 = data2 + "&billing_zip=" + billingZipEdt.getText().toString().trim();
-
-                    data2 = data2 + "&shipping_full_name=" + shippingFullNameEdt.getText().toString().trim();
-                    data2 = data2 + "&shipping_address_line1=" + shippingAddressLIne1Edt.getText().toString().trim();
-                    data2 = data2 + "&shipping_city=" + shippingCityEdt.getText().toString().trim();
-                    data2 = data2 + "&shipping_zip=" + shippingZipEdt.getText().toString().trim();
-
-                    data2 = data2 + "&products[][sku]=" + proSKUEdt.getText().toString().trim();
-                    data2 = data2 + "&products[][unit_price]=" + unitPriceEdt.getText().toString().trim();
-                    data2 = data2 + "&products[][quantity]=" + quantityEdt.getText().toString().trim();
-
+                    JSONObject jsonObject = new JSONObject();
                     try {
-                        //checksum format merchant_key|order_id|order_value|full_name|email|token
-                        String checkSumStr = Helper.generateCheckSum(merchantKeyEdt.getText().toString().trim() + "|" +
-                                orderIdEdt.getText().toString().trim() + "|" +
-                                orderValueEdt.getText().toString().trim() + "|" +
-                                fullNameEdt.getText().toString().trim() + "|" +
-                                emailEdt.getText().toString().trim() + "|" +
-                                merchantTokenEdt.getText().toString().trim());
+                        jsonObject.put("merchant_key",merchantKeyEdt.getText().toString().trim());
+                        jsonObject.put("merchant_token",merchantTokenEdt.getText().toString().trim());
+                        jsonObject.put("merchant_id",merchantIdEdt.getText().toString().trim());
+                        jsonObject.put("merchant_confirmation_url",merchantConfirmUrlEdt.getText().toString().trim());
+                        jsonObject.put("merchant_failure_url",merchantFailUrlEdt.getText().toString().trim());
+                        jsonObject.put("mobile",et_phone_no.getText().toString().trim());
+                        jsonObject.put("store_id",storeIdEdt.getText().toString().trim());
+                        jsonObject.put("order_id",orderIdEdt.getText().toString().trim());
+                        jsonObject.put("order_value",orderValueEdt.getText().toString().trim());
+                        jsonObject.put("udf1", "1.91");
+                        jsonObject.put("udf2", "7147");
+                        jsonObject.put("full_name", fullNameEdt.getText().toString().trim());
+                        jsonObject.put("email", emailEdt.getText().toString().trim());
+                        jsonObject.put("billing_address_line1", billingAddressLIne1Edt.getText().toString().trim());
+                        jsonObject.put("billing_zip", billingZipEdt.getText().toString().trim());
+                        jsonObject.put("shipping_address_line1", shippingAddressLIne1Edt.getText().toString().trim());
+                        jsonObject.put("shipping_zip", shippingZipEdt.getText().toString().trim());
+                        jsonObject.put("deviceType", "android");
+                        JSONObject product = new JSONObject();
+                        product.put("sku",proSKUEdt.getText().toString().trim());
+                        product.put("name","Bold Show Diamond Earrings");
+                        product.put("quantity",quantityEdt.getText().toString().trim());
+                        product.put("unit_price",unitPriceEdt.getText().toString().trim());
+                        product.put("udf2","7147");
+                        product.put("udf1","1.910 g");
 
-                        //data2 = data2+"&checksum_hash="+"119c97050ad1740d18afaa588bd1363b5f1e9de2b5d650d19e8bce15f1a2d71be996a3e200e313c20e3a0e72cb3aea3b33de4db7baf5c85d794bf211b8726352";
-                        data2 = data2 + "&checksum_hash=" + checkSumStr;
+                        JSONArray productJsonArray = new JSONArray();
+                        productJsonArray.put(product);
+                        jsonObject.put("products",productJsonArray);
 
-                        String finalData = data1 + phoneNumber + data2;
-                        Intent intent = new Intent(MainActivity.this, com.snapmint.merchantsdk.snapmintsdk.SnapmintOrderCheckoutActivity.class);
-                        //intent.putExtra("data", "utf8=?&co_source=sdk&authenticity_token=jnpr0Kea3obVQyC5N6OAVKA8rmdbfxCyGFADxGP8LT8hxltV5SCARcigKyZD6Ix/NRv8S8YiqGPwofAj3qrSrw==&source=&user_type=old_user&mobile=6547989250&merchant_id=1&store_id=1&order_id=1&order_value=20000&merchant_confirmation_url=uat.sodelsolutions.com/magento/magento/success&merchant_failure_url=uat.sodelsolutions.com/magento/magento/failed&shipping_fees=10000&udf1=test&udf2=test&udf3=test&full_name=GIRIDHAR+m+MAMIDIPALLY&email=rahul@snapmint.com&billing_first_name=GIRIDHAR&billing_middle_name=ravi&billing_last_name=MAMIDIPALLY&billing_full_name=GIRIDHAR+ravi+MAMIDIPALLY&billing_address_line1=GIRIDHAR+EVENT+ORGANRING&billing_address_line2=8-2-268/1/D/2+ROAD+NO+3&billing_city=Mumbai&billing_zip=400076&shipping_first_name=GIRIDHAR&shipping_middle_name=ravi&shipping_last_name=MAMIDIPALLY&shipping_full_name=GIRIDHAR+ravi+MAMIDIPALLY&shipping_address_line1=GIRIDHAR+EVENT+ORGANRING&shipping_address_line2=8-2-268/1/D/2+ROAD+NO+3&shipping_city=Mumbai&shipping_zip=400076&products[][sku]=abdx123&products[][name]=Product+2&products[][unit_price]=1000&products[][quantity]=5&products[][item_url]=https://google.com/test&products[][udf1]=udf1&products[][udf2]=udf2&products[][udf3]=udf3&products[][sku]=abdx123&products[][name]=Product+2&products[][unit_price]=1000&products[][quantity]=5&products[][item_url]=https://google.com/test&products[][udf1]=udf1&products[][udf2]=udf2&products[][udf3]=udf3&checksum_hash=119c97050ad1740d18afaa588bd1363b5f1e9de2b5d650d19e8bce15f1a2d71be996a3e200e313c20e3a0e72cb3aea3b33de4db7baf5c85d794bf211b8726352");
-                        intent.putExtra("data", finalData);
+                        Intent intent = new Intent(MainActivity.this, com.snapmint.merchantsdk.snapmintsdk.NewCheckoutWebViewActivity.class);
+                        intent.putExtra("data", jsonObject.toString());
                         intent.putExtra("option_clicked", "check_out");
                         intent.putExtra("callback", responseObject);
+                        intent.putExtra("base_url", etBaseUrl.getText().toString().trim());
+                        intent.putExtra("suc_url", merchantConfirmUrlEdt.getText().toString().trim());
+                        intent.putExtra("fail_url", merchantFailUrlEdt.getText().toString().trim());
                         startActivityForResult(intent,SnapmintConfiguration.SNAPMINT_PAYMENT);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -131,11 +131,15 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("data", "utf8=?&co_source=sdk&authenticity_token=jnpr0Kea3obVQyC5N6OAVKA8rmdbfxCyGFADxGP8LT8hxltV5SCARcigKyZD6Ix/NRv8S8YiqGPwofAj3qrSrw==&source=&user_type=old_user&mobile=9987026671&merchant_id=1&store_id=1&order_id=1&order_value=20000&merchant_confirmation_url=uat.sodelsolutions.com/magento/magento/success&merchant_failure_url=uat.sodelsolutions.com/magento/magento/failed&shipping_fees=10000&udf1=test&udf2=test&udf3=test&full_name=GIRIDHAR+m+MAMIDIPALLY&email=rahul@snapmint.com&billing_first_name=GIRIDHAR&billing_middle_name=ravi&billing_last_name=MAMIDIPALLY&billing_full_name=GIRIDHAR+ravi+MAMIDIPALLY&billing_address_line1=GIRIDHAR+EVENT+ORGANRING&billing_address_line2=8-2-268/1/D/2+ROAD+NO+3&billing_city=Mumbai&billing_zip=400076&shipping_first_name=GIRIDHAR&shipping_middle_name=ravi&shipping_last_name=MAMIDIPALLY&shipping_full_name=GIRIDHAR+ravi+MAMIDIPALLY&shipping_address_line1=GIRIDHAR+EVENT+ORGANRING&shipping_address_line2=8-2-268/1/D/2+ROAD+NO+3&shipping_city=Mumbai&shipping_zip=400076&products[][sku]=abdx123&products[][name]=Product+2&products[][unit_price]=1000&products[][quantity]=5&products[][item_url]=https://google.com/test&products[][udf1]=udf1&products[][udf2]=udf2&products[][udf3]=udf3&products[][sku]=abdx123&products[][name]=Product+2&products[][unit_price]=1000&products[][quantity]=5&products[][item_url]=https://google.com/test&products[][udf1]=udf1&products[][udf2]=udf2&products[][udf3]=udf3&checksum_hash=119c97050ad1740d18afaa588bd1363b5f1e9de2b5d650d19200e313c20e3a0e72cb3aea3jsdbfjbnbdshacfbdhjsbcvb33de4db7baf5c85d794bf211b8726352");
                 intent.putExtra("option_clicked", "check_out");
                 intent.putExtra("callback", responseObject);
+                intent.putExtra("base_url", etBaseUrl.getText().toString().trim());
+                intent.putExtra("suc_url", merchantConfirmUrlEdt.getText().toString().trim());
+                intent.putExtra("fail_url", merchantFailUrlEdt.getText().toString().trim());
                 startActivity(intent);
             }
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void inItView() {
         SnapmintEmiInfoButton snapmintButton = findViewById(R.id.snapmintButton);
         snapmintButton.showSnapmintEmiInfo("791", "1616/snap_ketch.json", true, SnapmintConfiguration.QA);
@@ -148,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
         orderValueEdt = findViewById(R.id.et_order_value);
         merchantConfirmUrlEdt = findViewById(R.id.et_merchant_confirmation_url);
         merchantFailUrlEdt = findViewById(R.id.et_merchant_failure_url);
+        etBaseUrl = findViewById(R.id.etBaseUrl);
 
         // Billing ID
         fullNameEdt = findViewById(R.id.et_full_name);
@@ -191,14 +196,16 @@ public class MainActivity extends AppCompatActivity {
         unitPriceEdt.setText("1000");
         quantityEdt.setText("5");*/
 
-        merchantIdEdt.setText("83");
-        merchantTokenEdt.setText("pR6AZlBb");
-        merchantKeyEdt.setText("0WYLBdpB");
+        et_phone_no.setText("7823478000");
+        merchantIdEdt.setText("351");
+        merchantTokenEdt.setText("C84NNfuS");
+        merchantKeyEdt.setText("CqBnaVCm");
         storeIdEdt.setText("1");
-        orderIdEdt.setText("1");
-        orderValueEdt.setText("20000");
+        orderIdEdt.setText("MELORRA-"+ new Random().nextInt());
+        orderValueEdt.setText("7000");
         merchantConfirmUrlEdt.setText("http://www.vijaysales.com/success");
         merchantFailUrlEdt.setText("http://www.vijaysales.com/failed");
+        etBaseUrl.setText("https://qaapi.snapmint.com/v1/public/s2s_online_checkout");
 
         fullNameEdt.setText("GIRIDHAR Crawley");
         emailEdt.setText("qwerty@gmail.com");
@@ -220,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isDataValidate() {
         if (TextUtils.isEmpty(et_phone_no.getText().toString().trim())
                 || TextUtils.isEmpty(merchantIdEdt.getText().toString().trim())
+                || TextUtils.isEmpty(etBaseUrl.getText().toString().trim())
                 || TextUtils.isEmpty(merchantKeyEdt.getText().toString().trim())
                 || TextUtils.isEmpty(merchantTokenEdt.getText().toString().trim())
                 || TextUtils.isEmpty(storeIdEdt.getText().toString().trim())
