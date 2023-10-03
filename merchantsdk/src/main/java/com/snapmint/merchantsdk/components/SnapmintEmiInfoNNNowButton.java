@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou;
 import com.snapmint.merchantsdk.R;
 import com.snapmint.merchantsdk.adapter.TermsAndConditionsAdapter;
 import com.snapmint.merchantsdk.api.ApiBuilder;
@@ -185,7 +184,10 @@ public class SnapmintEmiInfoNNNowButton extends FrameLayout implements View.OnCl
             tvTAndCSubTitle.setText(model.getTermsAndConditionsSubtitle());
             tvCashbackUpTo.setText(model.getAvailableOffer().replace("T&C", ""));
             if (!TextUtils.isEmpty(model.getTermsAndConditionsSnapmintLogo())) {
-                GlideToVectorYou.init().with(dialog.getContext()).load(Uri.parse(model.getTermsAndConditionsSnapmintLogo()), ivTAndCLogo);
+                Glide.with(dialog.getContext())
+                    .load(model.getTermsAndConditionsSnapmintLogo())
+                    .fitCenter()
+                    .into(ivTAndCLogo);
             }
         }
         tvTAndC.setOnClickListener(v -> {
