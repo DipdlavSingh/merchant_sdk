@@ -49,7 +49,7 @@ public class SnapmintEmiInfoNNNowButton extends FrameLayout implements View.OnCl
     private Double amountPay;
     private View view;
     private TextView tvPaymentText2;
-    private TextView tvPaymentText3;
+    private TextView tvPaymentText3,tvPaymentText5,tvCashbackAmount;
     private TextView tvCashbackUpTo;
     private TextView tvFlatOffer;
     private String orderValue;
@@ -104,7 +104,9 @@ public class SnapmintEmiInfoNNNowButton extends FrameLayout implements View.OnCl
         view = LayoutInflater.from(context).inflate(R.layout.snapmint_info_nnnow_layout, this, true);
         tvPayment = findViewById(R.id.tvPayment);
         tvPaymentText2 = findViewById(R.id.tvPaymentText2);
+        tvPaymentText5 = findViewById(R.id.tvPaymentText5);
         tvPaymentText3 = findViewById(R.id.tvPaymentText3);
+        tvCashbackAmount = findViewById(R.id.tvCashbackAmount);
         tvCashbackUpTo = findViewById(R.id.tvCashbackUpTo);
         tvFlatOffer = findViewById(R.id.tvFlatOffer);
         llDisableView = findViewById(R.id.llDisableView);
@@ -256,11 +258,13 @@ public class SnapmintEmiInfoNNNowButton extends FrameLayout implements View.OnCl
                         tvPayment.setText(model.getPayNowText1Part1());
                         tvPaymentText2.setText(model.getPayNowText1Part2().replace("pay_now", Utility.setSingleDynamicValue(view.getContext(), R.string.rs_amount, String.valueOf(amountPayDisabled.intValue()))));
                         tvPaymentText3.setText(model.getPayNowText1PopUpDisable());
+                        tvPaymentText5.setText(model.getSnapmintAppNameDisable());
+                        tvCashbackAmount.setText(" "+model.getAvailableOfferPrice());
                         termsList = model.getOfferTermsAndConditions();
                         llOfferView.setVisibility(!TextUtils.isEmpty(model.getOfferPercentage()) && !TextUtils.isEmpty(model.getOfferPercentage()) ? VISIBLE : GONE);
                         if (!TextUtils.isEmpty(model.getOfferPercentage()) && !TextUtils.isEmpty(model.getAvailableOffer())) {
-                            tvFlatOffer.setText(model.getOfferPercentage());
-                            tvCashbackUpTo.setText(model.getAvailableOffer().replace("T&C", ""));
+                            tvFlatOffer.setText(" "+model.getOfferPercentage());
+                            tvCashbackUpTo.setText(" "+model.getAvailableOffer().replace("T&C", ""));
                         }
 
                     }

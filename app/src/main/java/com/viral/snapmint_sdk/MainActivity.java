@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void inItView() {
         SnapmintEmiInfoNNNowButton snapmintButton = findViewById(R.id.snapmintButton);
-        snapmintButton.showSnapmintEmiInfo("791", "1616/snap_ketch.json", true, SnapmintConfiguration.QA);
+        snapmintButton.showSnapmintEmiInfo("791", "2435/snap_nnow.json", true, SnapmintConfiguration.PRE);
         et_phone_no = findViewById(R.id.et_phone_no);
         merchantIdEdt = findViewById(R.id.et_merchant_id);
         merchantKeyEdt = findViewById(R.id.et_merchant_key);

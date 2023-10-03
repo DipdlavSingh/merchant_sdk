@@ -42,7 +42,6 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_400_regular"
                 android:textColor="@color/color_131313"
-                android:text="0 Extra Cost"
                 android:textSize="14sp" />
 
 
@@ -63,7 +62,6 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter_400_regular"
             android:textColor="@color/color_131313"
-            android:text="Snapmint"
             android:textSize="14sp" />
 
 
@@ -78,7 +76,12 @@
             android:id="@+id/tvCashbackUpTo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
+            android:fontFamily="@font/inter_400_regular"
+            android:textColor="@color/pink" />
+        <TextView
+            android:id="@+id/tvCashbackAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:fontFamily="@font/inter_800_extra_bold"
             android:textColor="@color/pink" />
 
