@@ -10,11 +10,31 @@
         android:layout_margin="15dp"
         android:orientation="vertical">
 
+        <EditText
+            android:id="@+id/etOrderValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:inputType="number"
+            android:hint="Enter Order value"
+            android:textColor="@color/color_input"
+            android:textSize="@dimen/layout_content_small" />
+
+        <Button
+            android:id="@+id/btnChangeOrderValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Change Order Value" />
+
+
         <com.snapmint.merchantsdk.components.SnapmintEmiInfoButton
             android:id="@+id/snapmintButton"
             android:layout_width="match_parent"
-            android:layout_marginBottom="20dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp" />
 
         <TextView
             android:id="@+id/tv_base_url_text"
@@ -32,6 +52,7 @@
             android:hint="Enter Base url"
             android:textColor="@color/color_input"
             android:textSize="@dimen/layout_content_small" />
+
         <TextView
             android:id="@+id/tv_mobile_text"
             android:layout_width="match_parent"
