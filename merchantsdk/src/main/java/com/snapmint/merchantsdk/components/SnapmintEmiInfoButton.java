@@ -7,10 +7,17 @@ import android.net.Uri;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,10 +26,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou;
+import com.snapmint.merchantsdk.JSBridge.CheckoutWebViewInterface;
 import com.snapmint.merchantsdk.R;
 import com.snapmint.merchantsdk.adapter.TermsAndConditionsAdapter;
 import com.snapmint.merchantsdk.api.ApiBuilder;
@@ -30,12 +40,17 @@ import com.snapmint.merchantsdk.api.ApiServices;
 import com.snapmint.merchantsdk.constants.SnapmintConstants;
 import com.snapmint.merchantsdk.constants.SnapmintConfiguration;
 import com.snapmint.merchantsdk.models.EmiModel;
+import com.snapmint.merchantsdk.snapmintsdk.NewCheckoutWebViewActivity;
 import com.snapmint.merchantsdk.utils.Utility;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import retrofit2.Call;
@@ -146,6 +161,117 @@ public class SnapmintEmiInfoButton extends FrameLayout implements View.OnClickLi
         }
     }
 
+    private String loadHtmlFromAsset(Context context,String fileName) {
+        try {
+            InputStream inputStream = context.getAssets().open(fileName);
+            int size = inputStream.available();
+            byte[] buffer = new byte[size];
+            inputStream.read(buffer);
+            inputStream.close();
+            return new String(buffer, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    @SuppressLint("SetJavaScriptEnabled,SimpleDateFormat")
+    private void openSnapmintDialog(boolean isOffer, boolean isTAnC) {
+        final Dialog dialog = new Dialog(view.getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.dialog_snapmint_html_web_view);
+//        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
+        WebView webView = dialog.findViewById(R.id.webView);
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        String nextMonth = "";
+        String secondMonth = "";
+        int nextMonthDay = 0;
+        int secondMonthDay = 0;
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
+        SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+
+        try {
+            Calendar cal = Calendar.getInstance();
+            Calendar cal2 = Calendar.getInstance();
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            // Calculate next month
+            cal.add(Calendar.MONTH, day > 23 ? 2 : 1);
+            nextMonth = monthFormat.format(cal.getTime());
+            nextMonthDay = Integer.parseInt(dayFormat.format(cal.getTime()));
+
+            // Calculate the month after next
+            cal2.add(Calendar.MONTH, day > 23 ? 3 : 2);
+            secondMonth = monthFormat.format(cal2.getTime());
+            secondMonthDay = Integer.parseInt(dayFormat.format(cal2.getTime()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (webView != null) {
+            // Set up WebView and load HTML content
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.getSettings().setUseWideViewPort(true);
+            String htmlContent = loadHtmlFromAsset(dialog.getContext(), "snapmint_popup_content.html");
+            htmlContent = htmlContent.replace("{{down_payment_price}}", String.valueOf(amountPay.intValue()));
+            htmlContent = htmlContent.replace("{{first_emi_date}}", String.valueOf(nextMonthDay));
+            htmlContent = htmlContent.replace("{{first_emi_month}}", nextMonth);
+            htmlContent = htmlContent.replace("{{last_emi_date}}", String.valueOf(secondMonthDay));
+            htmlContent = htmlContent.replace("{{last_emi_month}}", secondMonth);
+            htmlContent = htmlContent.replace("{{first_emi_price}}", String.valueOf(firstEmiAmount.intValue()));
+            htmlContent = htmlContent.replace("{{last_emi_price}}", String.valueOf(secondEmiAmount.intValue()));
+            htmlContent = htmlContent.replace("{{first_emi_suffix}}", Utility.getNumberSuffix(nextMonthDay));
+            htmlContent = htmlContent.replace("{{last_emi_suffix}}", Utility.getNumberSuffix(secondMonthDay));
+
+            webView.addJavascriptInterface(new  MyWebJavaInterFace(dialog.getContext(),dialog),"Android");
+            webView.setWebViewClient(new WebViewClient(){
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                    // This method is called when a new URL is about to be loaded.
+                    // You can add your logic here if needed.
+                    return super.shouldOverrideUrlLoading(view, request);
+                }
+
+            });
+
+            webView.loadDataWithBaseURL(null, htmlContent, "text/html", "utf-8", null);
+        }
+        Window window = dialog.getWindow();
+        if (window != null) {
+            // Set the dialog width to match the screen width
+            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+            layoutParams.copyFrom(window.getAttributes());
+            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+//            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(layoutParams);
+        }
+        dialog.show();
+
+    }
+    public class MyWebJavaInterFace extends AppCompatActivity {
+        private final Context mContext;
+        private final Dialog mDialog;
+        MyWebJavaInterFace(Context context,Dialog dialog){
+            mContext = context;
+            mDialog = dialog;
+        }
+
+        // Other code...
+
+        // This method will be called from JavaScript
+        @JavascriptInterface
+        public void closePopup() {
+            // Add logic to close the popup in your Android code
+            runOnUiThread(() -> {
+               if(mDialog!=null && mDialog.isShowing()){
+                   mDialog.dismiss();
+               }
+            });
+        }
+    }
+/*
     private void openSnapmintDialog(boolean isOffer, boolean isTAnC) {
         final Dialog dialog = new Dialog(view.getContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -206,11 +332,7 @@ public class SnapmintEmiInfoButton extends FrameLayout implements View.OnClickLi
             tvTAndCSubTitle.setText(model.getTermsAndConditionsSubtitle());
             tvCashbackUpTo.setText(model.getAvailableOffer().replace("T&C", ""));
             if (!TextUtils.isEmpty(model.getTermsAndConditionsSnapmintLogo())) {
-                Glide.with(dialog.getContext())
-                    .load(model.getTermsAndConditionsSnapmintLogo())
-                    .fitCenter()
-                    .into(ivTAndCLogo);
-
+                GlideToVectorYou.init().with(dialog.getContext()).load(Uri.parse(model.getTermsAndConditionsSnapmintLogo()), ivTAndCLogo);
             }
         }
         tvTAndC.setOnClickListener(v -> {
@@ -232,6 +354,7 @@ public class SnapmintEmiInfoButton extends FrameLayout implements View.OnClickLi
         }
 
     }
+*/
 
     private void setTermsAndConditionList(Dialog dialog) {
         RecyclerView recycleTAndC = dialog.findViewById(R.id.recycleTAndC);

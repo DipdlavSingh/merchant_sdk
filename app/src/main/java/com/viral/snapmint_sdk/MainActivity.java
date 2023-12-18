@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     EditText proSKUEdt, unitPriceEdt, quantityEdt;
     EditText etBaseUrl;
     ResponseObject responseObject;
+    private EditText etOrderValue;
+    private Button btnChangeOrderValue;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -142,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void inItView() {
         SnapmintEmiInfoButton snapmintButton = findViewById(R.id.snapmintButton);
-        snapmintButton.showSnapmintEmiInfo("791", "1616/snap_ketch.json", true, SnapmintConfiguration.QA);
+        snapmintButton.showSnapmintEmiInfo("1571", "2435/snap_nnow.json", true, SnapmintConfiguration.PROD);
         et_phone_no = findViewById(R.id.et_phone_no);
         merchantIdEdt = findViewById(R.id.et_merchant_id);
         merchantKeyEdt = findViewById(R.id.et_merchant_key);
@@ -172,6 +174,18 @@ public class MainActivity extends AppCompatActivity {
         proSKUEdt = findViewById(R.id.et_sku);
         unitPriceEdt = findViewById(R.id.et_unit_price);
         quantityEdt = findViewById(R.id.et_quantity);
+
+        etOrderValue = findViewById(R.id.etOrderValue);
+        btnChangeOrderValue = findViewById(R.id.btnChangeOrderValue);
+
+        etOrderValue.setText("1571");
+        btnChangeOrderValue.setOnClickListener(view -> {
+            if (!TextUtils.isEmpty(etOrderValue.getText().toString())&& Integer.parseInt(etOrderValue.getText().toString()) >=200){
+                snapmintButton.showSnapmintEmiInfo(etOrderValue.getText().toString(), "2435/snap_nnow.json", true, SnapmintConfiguration.PROD);
+            }else{
+                Toast.makeText(this, "Please Select value minimum 200 or more ", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         /*merchantIdEdt.setText("");
         storeIdEdt.setText("1");

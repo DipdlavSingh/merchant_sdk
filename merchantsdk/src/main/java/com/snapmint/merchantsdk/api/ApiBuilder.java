@@ -1,7 +1,11 @@
 package com.snapmint.merchantsdk.api;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.moczul.ok2curl.CurlInterceptor;
+import com.snapmint.merchantsdk.BuildConfig;
 import com.snapmint.merchantsdk.constants.SnapmintConstants;
 import com.snapmint.merchantsdk.constants.SnapmintConfiguration;
 
@@ -24,16 +28,19 @@ public class ApiBuilder {
         SnapmintConfiguration snapmintConfiguration = new SnapmintConfiguration();
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().
-                addInterceptor(interceptor)
-                .connectTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
-                .readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS).build();
+        OkHttpClient.Builder client = new OkHttpClient.Builder();
+        if (BuildConfig.DEBUG) {
+            client.addInterceptor(new CurlInterceptor(s -> Log.v("Ok2Curl", s)));
+        }
+        client.addInterceptor(interceptor);
+        client.connectTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
+        client.readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
 
         Gson gson = new GsonBuilder().create();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(SnapmintConstants.BASE_URL)
-                .client(client)
+                .client(client.build())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
