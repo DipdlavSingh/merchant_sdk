@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:inputType="number"
             android:hint="Enter Order value"
             android:textColor="@color/color_input"
             android:textSize="@dimen/layout_content_small" />
@@ -87,7 +86,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:hint="Enter Merchant ID"
-            android:inputType="number"
             android:textColor="@color/color_input"
             android:textSize="@dimen/layout_content_small" />
 
@@ -106,7 +104,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:hint="Enter Merchant Key"
-            android:inputType="number"
             android:textColor="@color/color_input"
             android:textSize="@dimen/layout_content_small" />
 
@@ -125,7 +122,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:hint="Enter Merchant Token"
-            android:inputType="number"
             android:textColor="@color/color_input"
             android:textSize="@dimen/layout_content_small" />
 
@@ -144,7 +140,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:hint="Enter Store ID"
-            android:inputType="number"
             android:textColor="@color/color_input"
             android:textSize="@dimen/layout_content_small" />
 
@@ -163,7 +158,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:hint="Enter Order ID"
-            android:inputType="number"
             android:textColor="@color/color_input"
             android:textSize="@dimen/layout_content_small" />
 
@@ -182,7 +176,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:hint="Enter Order Value"
-            android:inputType="number"
             android:textColor="@color/color_input"
             android:textSize="@dimen/layout_content_small" />
 
