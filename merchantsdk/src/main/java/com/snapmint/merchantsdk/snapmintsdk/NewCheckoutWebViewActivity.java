@@ -39,7 +39,6 @@ import androidx.core.content.ContextCompat;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.normal.TedPermission;
-import com.moczul.ok2curl.CurlInterceptor;
 import com.snapmint.merchantsdk.BuildConfig;
 import com.snapmint.merchantsdk.JSBridge.CheckoutWebViewInterface;
 import com.snapmint.merchantsdk.R;
