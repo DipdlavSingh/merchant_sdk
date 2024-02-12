@@ -75,7 +75,7 @@
                 android:layout_toStartOf="@+id/ivReadMore"
                 android:fontFamily="@font/inter_500_medium"
                 android:textColor="@color/grey"
-                android:textSize="11sp"
+                android:textSize="10sp"
                 tools:ignore="SmallSp" />
 
             <ImageView

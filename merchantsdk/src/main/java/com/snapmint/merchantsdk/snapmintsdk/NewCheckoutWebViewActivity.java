@@ -39,10 +39,10 @@ import androidx.core.content.ContextCompat;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.normal.TedPermission;
-import com.moczul.ok2curl.CurlInterceptor;
 import com.snapmint.merchantsdk.BuildConfig;
 import com.snapmint.merchantsdk.JSBridge.CheckoutWebViewInterface;
 import com.snapmint.merchantsdk.R;
+import com.snapmint.merchantsdk.api.CurlLoggerInterceptor;
 import com.snapmint.merchantsdk.constants.ApiConstant;
 import com.snapmint.merchantsdk.constants.SnapmintConfiguration;
 import com.snapmint.merchantsdk.databinding.ActivityNewCheckoutWebviewBinding;
@@ -174,7 +174,7 @@ public class NewCheckoutWebViewActivity extends AppCompatActivity implements Che
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             OkHttpClient client;
             if (BuildConfig.DEBUG) {
-                client = new OkHttpClient.Builder().addInterceptor(new CurlInterceptor(s -> Log.v("Ok2Curl", s))).build();
+                client = new OkHttpClient.Builder().addInterceptor(new CurlLoggerInterceptor("cURL")).build();
             } else {
                 client = new OkHttpClient();
             }
@@ -197,7 +197,8 @@ public class NewCheckoutWebViewActivity extends AppCompatActivity implements Che
                             JSONObject jsonObject1 = new JSONObject(response.body().string());
                             if (jsonObject1.has("redirect_url")) {
                                 try {
-                                    setWebView(jsonObject1.getString("redirect_url"));
+                                    String webUrl = jsonObject1.getString("redirect_url");
+                                    setWebView(webUrl);
                                     Log.d("NewCheckout", "onResponse: " + jsonObject1.getString("redirect_url"));
                                 } catch (JSONException e) {
                                     binding.progressBar.setVisibility(View.GONE);

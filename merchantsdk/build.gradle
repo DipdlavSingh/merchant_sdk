@@ -56,7 +56,5 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.1'
     implementation 'com.github.2coffees1team:GlideToVectorYou:v2.0.0'
     implementation 'io.github.ParkSangGwon:tedpermission-normal:3.3.0'
-    implementation 'com.github.mrmike:ok2curl:0.8.0'
-
 
 }
