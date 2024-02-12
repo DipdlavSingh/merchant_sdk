@@ -199,13 +199,7 @@ public class NewCheckoutWebViewActivity extends AppCompatActivity implements Che
                             if (jsonObject1.has("redirect_url")) {
                                 try {
                                     String webUrl = jsonObject1.getString("redirect_url");
-                                    if(webUrl.contains("checkout.snapmint.com")){
-                                      webUrl =  webUrl.replace("checkout.snapmint.com","checkout-temp.snapmint.com");
-                                    }else if (webUrl.contains("emis.snapmint.com/plugin/snap_checkout/index.html")){
-                                        webUrl = webUrl.replace("emis.snapmint.com/plugin/snap_checkout/index.html","checkout.snapmint.com");
-                                    }
-                                    setWebView(jsonObject1.getString("redirect_url"));
-
+                                    setWebView(webUrl);
                                     Log.d("NewCheckout", "onResponse: " + jsonObject1.getString("redirect_url"));
                                 } catch (JSONException e) {
                                     binding.progressBar.setVisibility(View.GONE);

@@ -219,7 +219,8 @@ public class MainActivity extends AppCompatActivity {
         orderValueEdt.setText("7000");
         merchantConfirmUrlEdt.setText("http://www.vijaysales.com/success");
         merchantFailUrlEdt.setText("http://www.vijaysales.com/failed");
-        etBaseUrl.setText("https://api.snapmint.com/v1/public/s2s_online_checkout");
+//        etBaseUrl.setText("https://api.snapmint.com/v1/public/s2s_online_checkout");/*prod*/
+        etBaseUrl.setText("https://qaapi.snapmint.com/v1/public/s2s_online_checkout");/*Qa*/
 
         fullNameEdt.setText("GIRIDHAR Crawley");
         emailEdt.setText("qwerty@gmail.com");
