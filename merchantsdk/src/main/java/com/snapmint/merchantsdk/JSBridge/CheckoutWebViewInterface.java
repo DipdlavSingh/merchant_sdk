@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 public class CheckoutWebViewInterface {
 
   private static final String source = "MerchantAndroid";
+//  private static final String source = "Android";
   private static NewCheckoutWebViewActivity mContext;
 
   public CheckoutWebViewInterface(NewCheckoutWebViewActivity mContext) {

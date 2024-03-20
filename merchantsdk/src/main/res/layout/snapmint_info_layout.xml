@@ -2,8 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
+
+    <WebView
+        android:id="@+id/emiWebView"
+        android:layout_width="wrap_content"
+        android:scrollbars="none"
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:id="@+id/llEnableView"
@@ -75,7 +81,7 @@
                 android:layout_toStartOf="@+id/ivReadMore"
                 android:fontFamily="@font/inter_500_medium"
                 android:textColor="@color/grey"
-                android:textSize="11sp"
+                android:textSize="10sp"
                 tools:ignore="SmallSp" />
 
             <ImageView
