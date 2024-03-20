@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void inItView() {
         SnapmintEmiInfoButton snapmintButton = findViewById(R.id.snapmintButton);
-        snapmintButton.showSnapmintEmiInfo("1571", "2435/snap_nnow.json", true, SnapmintConfiguration.QA);
+        snapmintButton.showSnapmintEmiInfo("1571", "2435/snap_nnow.json", true, SnapmintConfiguration.PROD);
         et_phone_no = findViewById(R.id.et_phone_no);
         merchantIdEdt = findViewById(R.id.et_merchant_id);
         merchantKeyEdt = findViewById(R.id.et_merchant_key);
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         etOrderValue.setText("1571");
         btnChangeOrderValue.setOnClickListener(view -> {
             if (!TextUtils.isEmpty(etOrderValue.getText().toString())&& Integer.parseInt(etOrderValue.getText().toString()) >=200){
-                snapmintButton.showSnapmintEmiInfo(etOrderValue.getText().toString(), "2435/snap_nnow.json", true, SnapmintConfiguration.QA);
+                snapmintButton.showSnapmintEmiInfo(etOrderValue.getText().toString(), "2435/snap_nnow.json", true, SnapmintConfiguration.PROD);
             }else{
                 Toast.makeText(this, "Please Select value minimum 200 or more ", Toast.LENGTH_SHORT).show();
             }
@@ -219,8 +219,8 @@ public class MainActivity extends AppCompatActivity {
         orderValueEdt.setText("7000");
         merchantConfirmUrlEdt.setText("http://www.vijaysales.com/success");
         merchantFailUrlEdt.setText("http://www.vijaysales.com/failed");
-//        etBaseUrl.setText("https://api.snapmint.com/v1/public/s2s_online_checkout");/*prod*/
-        etBaseUrl.setText("https://qaapi.snapmint.com/v1/public/s2s_online_checkout");/*Qa*/
+        etBaseUrl.setText("https://api.snapmint.com/v1/public/s2s_online_checkout");/*prod*/
+//        etBaseUrl.setText("https://qaapi.snapmint.com/v1/public/s2s_online_checkout");/*Qa*/
 
         fullNameEdt.setText("GIRIDHAR Crawley");
         emailEdt.setText("qwerty@gmail.com");

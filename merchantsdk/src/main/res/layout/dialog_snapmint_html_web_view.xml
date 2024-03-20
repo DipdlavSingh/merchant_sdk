@@ -9,9 +9,9 @@
     <WebView
         android:id="@+id/webView"
         android:layout_width="match_parent"
-        android:layout_height="570dp"
+        android:layout_height="435dp"
         android:clipChildren="true"
-        android:background="@android:color/transparent"
+        android:background="@drawable/dialog_background"
         tools:ignore="UnusedAttribute" />
 
 </LinearLayout>

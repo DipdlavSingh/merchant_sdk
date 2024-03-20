@@ -81,6 +81,28 @@ public class EmiModel {
     @SerializedName("pay_now_text2")
     private String payNowText2;
 
+    @SerializedName("emi_widget")
+    private String emiWidget;
+
+    @SerializedName("emi_pop_up")
+    private String emiPopUp;
+
+    public String getEmiPopUp() {
+        return emiPopUp;
+    }
+
+    public void setEmiPopUp(String emiPopUp) {
+        this.emiPopUp = emiPopUp;
+    }
+
+    public String getEmiWidget() {
+        return emiWidget;
+    }
+
+    public void setEmiWidget(String emiWidget) {
+        this.emiWidget = emiWidget;
+    }
+
     public String getOfferPercentage() {
         return offerPercentage;
     }
