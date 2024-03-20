@@ -7,9 +7,12 @@ import android.net.Uri;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -59,6 +62,7 @@ import retrofit2.Response;
 
 public class SnapmintEmiInfoButton extends FrameLayout implements View.OnClickListener {
 
+    private WebView emiWebView;
     private TextView tvPayment;
     private TextView tvCredit;
     private ImageView ivSnapmint;
@@ -138,6 +142,7 @@ public class SnapmintEmiInfoButton extends FrameLayout implements View.OnClickLi
         tvDisableText6 = findViewById(R.id.tvDisableText6);
         tvDisableText8 = findViewById(R.id.tvDisableText8);
         tvCredit = findViewById(R.id.tvCredit);
+        emiWebView = findViewById(R.id.emiWebView);
         TextView tvTnc = findViewById(R.id.tvTnc);
         ivSnapmint = findViewById(R.id.ivSnapmint);
         ivSnapmintLogo = findViewById(R.id.ivSnapmintLogo);
@@ -214,7 +219,12 @@ public class SnapmintEmiInfoButton extends FrameLayout implements View.OnClickLi
             // Set up WebView and load HTML content
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setUseWideViewPort(true);
-            String htmlContent = loadHtmlFromAsset(dialog.getContext(), "snapmint_popup_content.html");
+            String htmlContent;
+            if(TextUtils.isEmpty(model.getEmiPopUp())){
+                htmlContent = loadHtmlFromAsset(dialog.getContext(), "snapmint_popup_content.html");
+            }else{
+                htmlContent = model.getEmiPopUp();
+            }
             htmlContent = htmlContent.replace("{{down_payment_price}}", String.valueOf(amountPay.intValue()));
             htmlContent = htmlContent.replace("{{first_emi_date}}", String.valueOf(nextMonthDay));
             htmlContent = htmlContent.replace("{{first_emi_month}}", nextMonth);
@@ -224,6 +234,7 @@ public class SnapmintEmiInfoButton extends FrameLayout implements View.OnClickLi
             htmlContent = htmlContent.replace("{{last_emi_price}}", String.valueOf(secondEmiAmount.intValue()));
             htmlContent = htmlContent.replace("{{first_emi_suffix}}", Utility.getNumberSuffix(nextMonthDay));
             htmlContent = htmlContent.replace("{{last_emi_suffix}}", Utility.getNumberSuffix(secondMonthDay));
+            htmlContent = htmlContent.replace("{{total_order_value}}", orderValue);
 
             webView.addJavascriptInterface(new  MyWebJavaInterFace(dialog.getContext(),dialog),"Android");
             webView.setWebViewClient(new WebViewClient(){
@@ -410,6 +421,7 @@ public class SnapmintEmiInfoButton extends FrameLayout implements View.OnClickLi
                         if (secDesAfterDecimal > 0) {
                             emiDisabledAmount = emiDisabledAmount + 1;
                         }
+                        setEmiWebView(model.getEmiWidget());
                         tvPayment.setText(model.getPayNowText1Part1());
                         tvPaymentText2.setText(model.getPayNowText1Part2().replace("pay_now", Utility.setSingleDynamicValue(view.getContext(), R.string.rs_amount, String.valueOf(amountPay.intValue()))));
                         tvPaymentText3.setText(model.getPayNowText1Part3());
@@ -423,10 +435,10 @@ public class SnapmintEmiInfoButton extends FrameLayout implements View.OnClickLi
                         Glide.with(view.getContext()).load(model.getPayNowImage1PopUpDisable()).into(ivSnapmintText);
                         Glide.with(view.getContext()).load("https://assets.snapmint.com/assets/merchant/emitxt/green_dark_button.png").into(ivReadMore);
                         tvCredit.setText(model.getPayNowText3());
-                        llEnableView.setVisibility(isEnable ? View.VISIBLE : View.GONE);
-                        llDisableView.setVisibility(isEnable ? View.GONE : View.VISIBLE);
+//                        llEnableView.setVisibility(isEnable ? View.VISIBLE : View.GONE);
+//                        llDisableView.setVisibility(isEnable ? View.GONE : View.VISIBLE);
                         termsList = model.getOfferTermsAndConditions();
-                        llOfferView.setVisibility(!TextUtils.isEmpty(model.getOfferPercentage()) && !TextUtils.isEmpty(model.getOfferPercentage()) ? VISIBLE : GONE);
+//                        llOfferView.setVisibility(!TextUtils.isEmpty(model.getOfferPercentage()) && !TextUtils.isEmpty(model.getOfferPercentage()) ? VISIBLE : GONE);
                         if (!TextUtils.isEmpty(model.getOfferPercentage()) && !TextUtils.isEmpty(model.getAvailableOffer())) {
                             tvFlatOffer.setText(model.getOfferPercentage());
                             ivReadMore.setVisibility(GONE);
@@ -438,12 +450,74 @@ public class SnapmintEmiInfoButton extends FrameLayout implements View.OnClickLi
                     }
 
                 } catch (Exception e) {
-                }
+                    Log.e("TAG", "onFailure: "+e );
+                                    }
             }
 
             @Override
             public void onFailure(@NonNull Call<EmiModel> call, @NonNull Throwable t) {
+                Log.e("TAG", "onFailure: "+t );
             }
         });
+    }
+
+    @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
+    private void setEmiWebView(String emiWidget) {
+        WebSettings webSettings = emiWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        if(TextUtils.isEmpty(emiWidget)){
+            emiWidget = "<style>.snap_emi_txt{text-align:center;justify-content:center;width:max-content;border-radius:10.9399px;position:relative;margin-bottom:5px;background:#fff;margin-bottom:10px;cursor:pointer}.snap-emi-inst{font-family:Inter,sans-serif;font-weight:700!important;font-size:18px;line-height:16px!important;color:#000!important;padding-top:4px!important;text-align:left;letter-spacing:normal}.snap-emi-inst b{font-weight:700!important}img.info-img{position:relative!important;top:-1px!important}.snap-emi-inst img,.snap-emi-inst span,.snap-emi-slogan img,.snap-emi-slogan span{display:inline-block!important;vertical-align:middle!important}.snap-emi-inst b,.snap-emi-slogan .snap_emi_slogan_text b{font-weight:700}.snap-emi-slogan{font-family:Inter,sans-serif;font-size:12.5px!important;line-height:16px!important;padding-bottom:6px!important;letter-spacing:normal;display:flex;justify-content:space-between;align-items:center;font-weight:400;color:#090909!important}.snap_widget_powered_text img{max-width:100px!important;width:70px!important}.snap_widget_powered_text{margin-left:0;margin-bottom:0;font-size:8px;color:#000;font-weight:500}.snap_emi_txt .snap_widget_powered_text img{margin-left:4px!important}.snap_buy_now_btn{width:62px!important;max-width:90px}.snap_padding_left{padding-left:3px}.snap_grey_dot{background:rgba(52,52,52,1);width:5px;height:5px;border-radius:50%}.snap_powered_text{font-size:8px;color:#878787}.snap_upi_widget_img{width:40px;max-width:90px;margin-bottom:-2px}.snap_emi_txt .snap_text_pink{color:#d90075}</style><div id='sm-widget-btn' class='snap_emi_txt snap_emi_txt_wrapper' onclick='startPop()'><div class='snap-emi-inst'>or 3 Monthly Payments of<span class='snap_text_pink'>₹{{down_payment_price}}</span></div><div class='snap-emi-slogan'><span><span class='snap_emi_slogan_text'><b>0%</b>EMI on</span><img src='https://preemi.snapmint.com/assets/whitelable/UPI-Logo-vector%201.svg' class='snap_upi_widget_img'></span><span><span class='snap_widget_powered_text'><span class='snap_grey_dot'></span><img src='https://assets.snapmint.com/assets/merchant/snapmint_logo_black_text.svg'></span></span><div><img src='https://assets.snapmint.com/assets/merchant/view_more_pink.svg' class='snap_buy_now_btn'></div></div></div>";
+        }
+        // Replace placeholder with amountPay value
+        emiWidget = emiWidget.replace("{{down_payment_price}}", String.valueOf(amountPay.intValue()));
+
+        // Set a WebViewClient to handle page loading events
+        emiWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                super.onReceivedError(view, errorCode, description, failingUrl);
+                Log.e("WebView", "Error loading webpage: " + description);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                Log.d("WebView", "Page finished loading: " + url);
+            }
+        });
+
+        emiWebView.loadDataWithBaseURL(null, emiWidget, "text/html", "UTF-8", null);
+        emiWebView.setOnTouchListener(new View.OnTouchListener() {
+            private float startX;
+            private float startY;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        startX = event.getX();
+                        startY = event.getY();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        float endX = event.getX();
+                        float endY = event.getY();
+                        float touchSlop = ViewConfiguration.get(v.getContext()).getScaledTouchSlop();
+                        if (Math.abs(endX - startX) < touchSlop && Math.abs(endY - startY) < touchSlop) {
+                            openSnapmintDialog(!TextUtils.isEmpty(model.getAvailableOffer()) && !TextUtils.isEmpty(model.getOfferPercentage()), false);
+                            // Click detected, handle the click event here
+                            // For example, you can load a URL or execute JavaScript
+                            return true; // Consume the touch event
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
+
+        // Load HTML content into WebView
+
     }
 }
