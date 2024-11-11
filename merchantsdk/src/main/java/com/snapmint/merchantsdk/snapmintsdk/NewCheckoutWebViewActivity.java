@@ -191,28 +191,31 @@ public class NewCheckoutWebViewActivity extends AppCompatActivity implements Che
 
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    Log.e("TAG", "onResponse: " + response.body());
-                    runOnUiThread(() -> {
-                        try {
-                            JSONObject jsonObject1 = new JSONObject(response.body().string());
+                    try {
+                        JSONObject jsonObject1 = new JSONObject(response.body().string());
+                        runOnUiThread(() -> {
                             if (jsonObject1.has("redirect_url")) {
                                 try {
-                                    String webUrl = jsonObject1.getString("redirect_url");
-                                    setWebView(webUrl);
-                                    Log.d("NewCheckout", "onResponse: " + jsonObject1.getString("redirect_url"));
+                                    setWebView(jsonObject1.getString("redirect_url"));
                                 } catch (JSONException e) {
                                     binding.progressBar.setVisibility(View.GONE);
                                 }
                             } else {
                                 binding.progressBar.setVisibility(View.GONE);
-                                showErrorDialog(jsonObject1.getString("message"));
+                                try {
+                                    showErrorDialog(jsonObject1.getString("message"));
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
                             }
-                        } catch (Exception e) {
+                        });
+                    } catch (Exception e) {
+                        runOnUiThread(() -> {
+                            Log.e("NewCheckout", "callOkHttpAPi: "+e );
                             binding.progressBar.setVisibility(View.GONE);
                             showErrorDialog("Incomplete response received from application");
-                        }
-
-                    });
+                        });
+                    }
                 }
             });
         } catch (Exception e) {

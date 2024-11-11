@@ -144,7 +144,8 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void inItView() {
         SnapmintEmiInfoButton snapmintButton = findViewById(R.id.snapmintButton);
-        snapmintButton.showSnapmintEmiInfo("1571", "2435/snap_nnow.json", true, SnapmintConfiguration.PROD);
+//        snapmintButton.showSnapmintEmiInfo("1571", "2435/snap_nnow.json", true, SnapmintConfiguration.PROD);
+        snapmintButton.showSnapmintEmiInfo("791", "2435/snap_nnow.json", true, SnapmintConfiguration.QA);
         et_phone_no = findViewById(R.id.et_phone_no);
         merchantIdEdt = findViewById(R.id.et_merchant_id);
         merchantKeyEdt = findViewById(R.id.et_merchant_key);
@@ -210,16 +211,17 @@ public class MainActivity extends AppCompatActivity {
         unitPriceEdt.setText("1000");
         quantityEdt.setText("5");*/
 
-        et_phone_no.setText("7823478000");
-        merchantIdEdt.setText("2435");
-        merchantTokenEdt.setText("R9W9o0VB");
-        merchantKeyEdt.setText("t_897EjQ");
+        et_phone_no.setText("8310669856");
+        merchantIdEdt.setText("1456");
+        merchantTokenEdt.setText("UOYY0R_n");
+        merchantKeyEdt.setText("cQ_kvgB0");
         storeIdEdt.setText("1");
         orderIdEdt.setText("MELORRA-"+ new Random().nextInt());
         orderValueEdt.setText("7000");
         merchantConfirmUrlEdt.setText("http://www.vijaysales.com/success");
         merchantFailUrlEdt.setText("http://www.vijaysales.com/failed");
-        etBaseUrl.setText("https://api.snapmint.com/v1/public/s2s_online_checkout");/*prod*/
+        etBaseUrl.setText("https://sandboxapi.snapmint.com/v1/public/s2s_online_checkout");/*prod*/
+//        etBaseUrl.setText("https://qaapi.snapmint.com/v1/public/s2s_online_checkout");/*Qa*/
 //        etBaseUrl.setText("https://qaapi.snapmint.com/v1/public/s2s_online_checkout");/*Qa*/
 
         fullNameEdt.setText("GIRIDHAR Crawley");
