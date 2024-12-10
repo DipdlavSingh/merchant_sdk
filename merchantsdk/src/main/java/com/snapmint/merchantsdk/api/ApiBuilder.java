@@ -38,7 +38,7 @@ public class ApiBuilder {
         Gson gson = new GsonBuilder().create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(/*SnapmintConstants.BASE_URL*/"https://assets.snapmint.com/")
+                .baseUrl(/*SnapmintConstants.BASE_URL*/"https://merchant-js.snapmint.com/")
                 .client(client.build())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();

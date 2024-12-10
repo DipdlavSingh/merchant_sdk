@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.snapmint.merchantsdk.components.SnapmintEmiInfoButton;
+import com.snapmint.merchantsdk.components.SnapmintEmiInfoTitanButton;
 import com.snapmint.merchantsdk.constants.SnapmintConstants;
 import com.snapmint.merchantsdk.constants.SnapmintConfiguration;
 import com.viral.snapmint_sdk.utils.Helper;
@@ -143,9 +144,11 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void inItView() {
-        SnapmintEmiInfoButton snapmintButton = findViewById(R.id.snapmintButton);
+//        SnapmintEmiInfoButton snapmintButton = findViewById(R.id.snapmintButton);
+        SnapmintEmiInfoTitanButton snapmintEmiInfoTitanButton = findViewById(R.id.titanInfoButton);
 //        snapmintButton.showSnapmintEmiInfo("1571", "2435/snap_nnow.json", true, SnapmintConfiguration.PROD);
-        snapmintButton.showSnapmintEmiInfo("791", "2435/snap_nnow.json", true, SnapmintConfiguration.QA);
+//        snapmintButton.showSnapmintEmiInfo("791", "2435/snap_nnow.json", true, SnapmintConfiguration.QA);
+        snapmintEmiInfoTitanButton.showSnapmintEmiInfo("4500", "4858/snap_titan.json", true, SnapmintConfiguration.QA);
         et_phone_no = findViewById(R.id.et_phone_no);
         merchantIdEdt = findViewById(R.id.et_merchant_id);
         merchantKeyEdt = findViewById(R.id.et_merchant_key);
@@ -179,10 +182,10 @@ public class MainActivity extends AppCompatActivity {
         etOrderValue = findViewById(R.id.etOrderValue);
         btnChangeOrderValue = findViewById(R.id.btnChangeOrderValue);
 
-        etOrderValue.setText("1571");
+        etOrderValue.setText("4500");
         btnChangeOrderValue.setOnClickListener(view -> {
             if (!TextUtils.isEmpty(etOrderValue.getText().toString())&& Integer.parseInt(etOrderValue.getText().toString()) >=200){
-                snapmintButton.showSnapmintEmiInfo(etOrderValue.getText().toString(), "2435/snap_nnow.json", true, SnapmintConfiguration.PROD);
+                snapmintEmiInfoTitanButton.showSnapmintEmiInfo(etOrderValue.getText().toString(), "4858/snap_titan.json", true, SnapmintConfiguration.QA);
             }else{
                 Toast.makeText(this, "Please Select value minimum 200 or more ", Toast.LENGTH_SHORT).show();
             }
@@ -211,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
         unitPriceEdt.setText("1000");
         quantityEdt.setText("5");*/
 
-        et_phone_no.setText("8310669856");
+        et_phone_no.setText("7415630303");
         merchantIdEdt.setText("1456");
         merchantTokenEdt.setText("UOYY0R_n");
         merchantKeyEdt.setText("cQ_kvgB0");

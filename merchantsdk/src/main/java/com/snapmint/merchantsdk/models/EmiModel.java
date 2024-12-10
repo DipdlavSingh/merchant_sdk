@@ -33,6 +33,9 @@ public class EmiModel {
     @SerializedName("emi_one_percentage")
     private String emiOnePercentage;
 
+    @SerializedName("emi_third_percentage")
+    private String emiThirdPercentage;
+
     @SerializedName("pay_now_text1_pop_up_disable")
     private String payNowText1PopUpDisable;
 
@@ -86,6 +89,72 @@ public class EmiModel {
 
     @SerializedName("emi_pop_up")
     private String emiPopUp;
+
+    @SerializedName("emi_pop_up_1")
+    private String emiPopUp1;
+
+    @SerializedName("emi_pop_up_2")
+    private String emiPopUp2;
+
+    @SerializedName("emi_pop_up_3")
+    private String emiPopUp3;
+
+    @SerializedName("emi_pop_up_4")
+    private String emiPopUp4;
+
+    @SerializedName("emi_pop_up_5")
+    private String emiPopUp5;
+
+    @SerializedName("tenure_list")
+    private List<TenureModel> tenureList;
+
+    public String getEmiPopUp1() {
+        return emiPopUp1;
+    }
+
+    public void setEmiPopUp1(String emiPopUp1) {
+        this.emiPopUp1 = emiPopUp1;
+    }
+
+    public String getEmiPopUp2() {
+        return emiPopUp2;
+    }
+
+    public void setEmiPopUp2(String emiPopUp2) {
+        this.emiPopUp2 = emiPopUp2;
+    }
+
+    public String getEmiPopUp3() {
+        return emiPopUp3;
+    }
+
+    public void setEmiPopUp3(String emiPopUp3) {
+        this.emiPopUp3 = emiPopUp3;
+    }
+
+    public String getEmiPopUp4() {
+        return emiPopUp4;
+    }
+
+    public void setEmiPopUp4(String emiPopUp4) {
+        this.emiPopUp4 = emiPopUp4;
+    }
+
+    public String getEmiPopUp5() {
+        return emiPopUp5;
+    }
+
+    public void setEmiPopUp5(String emiPopUp5) {
+        this.emiPopUp5 = emiPopUp5;
+    }
+
+    public List<TenureModel> getTenureList() {
+        return tenureList;
+    }
+
+    public void setTenureList(List<TenureModel> tenureList) {
+        this.tenureList = tenureList;
+    }
 
     public String getEmiPopUp() {
         return emiPopUp;

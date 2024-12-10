@@ -54,6 +54,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.Call;
@@ -289,11 +290,13 @@ public class NewCheckoutWebViewActivity extends AppCompatActivity implements Che
         @SuppressLint("WebViewClientOnReceivedSslError")
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            Log.d("NewCheckout", "onReceivedSslError: "+error);
             final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setMessage(R.string.notification_error_ssl_cert_invalid);
             builder.setPositiveButton("continue", (dialog, which) -> handler.proceed());
             builder.setNegativeButton("cancel", (dialog, which) -> handler.cancel());
             final AlertDialog dialog = builder.create();
+            if(dialog.isShowing()) return;
             dialog.show();
         }
 
@@ -347,8 +350,41 @@ public class NewCheckoutWebViewActivity extends AppCompatActivity implements Che
                 @Override
                 public void onPermissionRequest(PermissionRequest request) {
                     super.onPermissionRequest(request);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        request.grant(request.getResources());
+                    try {
+                        if (Arrays.asList(request.getResources()).contains(PermissionRequest.RESOURCE_VIDEO_CAPTURE)) {
+
+                            // Check if camera permission is already granted
+                            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA)
+                                    == PackageManager.PERMISSION_GRANTED) {
+                                // Grant the permission if already granted
+                                request.grant(new String[]{PermissionRequest.RESOURCE_VIDEO_CAPTURE});
+                            } else {
+                                // Request camera permission using TedPermission
+                                TedPermission.create()
+                                        .setPermissionListener(new PermissionListener() {
+                                            @Override
+                                            public void onPermissionGranted() {
+                                                // If granted, grant the WebView permission for camera
+                                                request.grant(new String[]{PermissionRequest.RESOURCE_VIDEO_CAPTURE});
+                                            }
+
+                                            @Override
+                                            public void onPermissionDenied(List<String> deniedPermissions) {
+                                                // If denied, show a toast and deny the permission request
+                                                Toast.makeText(mContext, R.string.please_give_camera_permission_without_that_we_cannot, Toast.LENGTH_SHORT).show();
+                                                request.deny();
+                                            }
+                                        })
+                                        .setDeniedMessage(R.string.please_give_camera_permission_without_that_we_cannot)
+                                        .setPermissions(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                        .check();
+                            }
+                        } else {
+                            // Deny other permissions if they are not camera-related
+                            request.deny();
+                        }
+                    }catch (Exception e){
+                        Log.e("","onPermissionRequest :"+e.getMessage());
                     }
                 }
 
@@ -386,24 +422,33 @@ public class NewCheckoutWebViewActivity extends AppCompatActivity implements Che
         @Override
         public void onPermissionRequest(PermissionRequest request) {
             try {
-                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-                    TedPermission.create().setPermissionListener(new PermissionListener() {
-                        @SuppressLint("NewApi")
-                        @Override
-                        public void onPermissionGranted() {
-                            request.grant(request.getResources());
-                        }
+                if (Arrays.asList(request.getResources()).contains(PermissionRequest.RESOURCE_VIDEO_CAPTURE)) {
+                    if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        request.grant(new String[]{PermissionRequest.RESOURCE_VIDEO_CAPTURE});
+                    } else {
+                        TedPermission.create()
+                                .setPermissionListener(new PermissionListener() {
+                                    @Override
+                                    public void onPermissionGranted() {
+                                        request.grant(new String[]{PermissionRequest.RESOURCE_VIDEO_CAPTURE});
+                                    }
 
-                        @Override
-                        public void onPermissionDenied(List<String> deniedPermissions) {
-                            Toast.makeText(mContext, R.string.please_give_camera_permission_without_that_we_cannot, Toast.LENGTH_SHORT).show();
-                        }
-                    }).setDeniedMessage(R.string.please_give_camera_permission_without_that_we_cannot).setPermissions(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE).check();
+                                    @Override
+                                    public void onPermissionDenied(List<String> deniedPermissions) {
+                                        Toast.makeText(mContext, R.string.please_give_camera_permission_without_that_we_cannot, Toast.LENGTH_SHORT).show();
+                                        request.deny();
+                                    }
+                                })
+                                .setDeniedMessage(R.string.please_give_camera_permission_without_that_we_cannot)
+                                .setPermissions(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                .check();
+                    }
                 } else {
-                    request.grant(request.getResources());
+                    request.deny();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            }catch (Exception e){
+                Log.e("NewCheckout","onPermissionRequest :"+e.getMessage());
             }
         }
 
