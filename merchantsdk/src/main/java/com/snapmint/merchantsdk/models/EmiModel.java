@@ -33,8 +33,14 @@ public class EmiModel {
     @SerializedName("emi_one_percentage")
     private String emiOnePercentage;
 
-    @SerializedName("emi_third_percentage")
-    private String emiThirdPercentage;
+    @SerializedName("emi_one_percentage_3_tenure")
+    private String emiOnePercentage3Tenure;
+
+    @SerializedName("emi_second_percentage_3_tenure")
+    private String emiSecondPercentage3Tenure;
+
+    @SerializedName("emi_third_percentage_3_tenure")
+    private String emiThirdPercentage3Tenure;
 
     @SerializedName("pay_now_text1_pop_up_disable")
     private String payNowText1PopUpDisable;
@@ -44,6 +50,9 @@ public class EmiModel {
 
     @SerializedName("pay_now_percentage")
     private String payNowPercentage;
+
+    @SerializedName("pay_now_percentage_3_tenure")
+    private String payNowPercentage3Tenure;
 
     @SerializedName("available_offer_price")
     private String availableOfferPrice;
@@ -107,6 +116,38 @@ public class EmiModel {
 
     @SerializedName("tenure_list")
     private List<TenureModel> tenureList;
+
+    public String getEmiOnePercentage3Tenure() {
+        return emiOnePercentage3Tenure;
+    }
+
+    public void setEmiOnePercentage3Tenure(String emiOnePercentage3Tenure) {
+        this.emiOnePercentage3Tenure = emiOnePercentage3Tenure;
+    }
+
+    public String getEmiSecondPercentage3Tenure() {
+        return emiSecondPercentage3Tenure;
+    }
+
+    public void setEmiSecondPercentage3Tenure(String emiSecondPercentage3Tenure) {
+        this.emiSecondPercentage3Tenure = emiSecondPercentage3Tenure;
+    }
+
+    public String getEmiThirdPercentage3Tenure() {
+        return emiThirdPercentage3Tenure;
+    }
+
+    public void setEmiThirdPercentage3Tenure(String emiThirdPercentage3Tenure) {
+        this.emiThirdPercentage3Tenure = emiThirdPercentage3Tenure;
+    }
+
+    public String getPayNowPercentage3Tenure() {
+        return payNowPercentage3Tenure;
+    }
+
+    public void setPayNowPercentage3Tenure(String payNowPercentage3Tenure) {
+        this.payNowPercentage3Tenure = payNowPercentage3Tenure;
+    }
 
     public String getEmiPopUp1() {
         return emiPopUp1;

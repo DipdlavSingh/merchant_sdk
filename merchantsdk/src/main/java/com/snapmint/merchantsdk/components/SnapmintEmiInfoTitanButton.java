@@ -4,9 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -87,6 +92,7 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
     private Double amountPayDisabled;
     private List<String> termsList = new ArrayList<>();
     private EmiModel model = new EmiModel();
+    private int dialogHeight = 460;
 
     public SnapmintEmiInfoTitanButton(@NonNull Context context) {
         super(context);
@@ -162,7 +168,7 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
         }
     }
 
-    private String loadHtmlFromAsset(Context context,String fileName) {
+    private String loadHtmlFromAsset(Context context, String fileName) {
         try {
             InputStream inputStream = context.getAssets().open(fileName);
             int size = inputStream.available();
@@ -182,8 +188,7 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.dialog_snapmint_html_web_view);
-//        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
         WebView webView = dialog.findViewById(R.id.webView);
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
         String nextMonth = "";
@@ -224,7 +229,7 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
             // Set up WebView and load HTML content
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setUseWideViewPort(true);
-            String htmlContent = determineEmiPopup(dialog.getContext(),orderValue);
+            String htmlContent = determineEmiPopup(dialog.getContext(), orderValue);
 
             htmlContent = htmlContent.replace("{{down_payment_price}}", String.valueOf(amountPay.intValue()));
             htmlContent = htmlContent.replace("{{first_emi_date}}", String.valueOf(nextMonthDay));
@@ -240,6 +245,7 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
             htmlContent = htmlContent.replace("{{second_emi_suffix}}", Utility.getNumberSuffix(secondMonthDay));
             htmlContent = htmlContent.replace("{{third_emi_suffix}}", Utility.getNumberSuffix(thirdMonthDay));
             htmlContent = htmlContent.replace("{{total_order_value}}", orderValue);
+            htmlContent = htmlContent.replace("http://", "https://");
             if (model.getTenureList() != null && !model.getTenureList().isEmpty()) {
                 for (int i = 0; i < model.getTenureList().size(); i++) {
                     TenureModel tenureModel = model.getTenureList().get(i);
@@ -253,8 +259,8 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
                 }
             }
 
-            webView.addJavascriptInterface(new  MyWebJavaInterFace(dialog.getContext(),dialog),"Android");
-            webView.setWebViewClient(new WebViewClient(){
+            webView.addJavascriptInterface(new MyWebJavaInterFace(dialog.getContext(), dialog), "Android");
+            webView.setWebViewClient(new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                     // This method is called when a new URL is about to be loaded.
@@ -263,23 +269,50 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
                 }
 
             });
+            webView.setWebViewClient(new WebViewClient() {
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    String script = "(function() {\n" +
+                            "var modalWrapper = document.querySelector('.modal-wrpr');\n" +
+                            "        var height = modalWrapper.offsetHeight;\n" +
+                            "        return height;" +
+                            "})();";
+                    webView.evaluateJavascript(script, s -> {
+                        Log.d("TitanWeb", "webViewHeight: " + s);
+                        if (TextUtils.isDigitsOnly(s)) {
+                            int heightInPixels = (int) TypedValue.applyDimension(
+                                    TypedValue.COMPLEX_UNIT_DIP,
+                                    Integer.parseInt(s),
+                                    getResources().getDisplayMetrics()
+                            );
 
+                            // Set layout parameters with fixed height
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT, // Match parent for width
+                                    heightInPixels                       // Fixed height in pixels
+                            );
+                            webView.setLayoutParams(params);
+                        }
+                    });
+                }
+            });
             webView.loadDataWithBaseURL(null, htmlContent, "text/html", "utf-8", null);
+
         }
         Window window = dialog.getWindow();
         if (window != null) {
-            // Set the dialog width to match the screen width
-            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-            layoutParams.copyFrom(window.getAttributes());
-            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-//            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            window.setAttributes(layoutParams);
+            window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT)); // Optional for a transparent background
+            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+            params.gravity = Gravity.CENTER; // Center the dialog
+            window.setAttributes(params);
+            window.setDimAmount(0.5f);// Apply the animation style
         }
         dialog.show();
 
     }
 
-    private String determineEmiPopup(Context context,String orderValue) {
+    private String determineEmiPopup(Context context, String orderValue) {
         try {
             double value = Double.parseDouble(orderValue);
             if (value < 2000) {
@@ -304,7 +337,8 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
     public class MyWebJavaInterFace extends AppCompatActivity {
         private final Context mContext;
         private final Dialog mDialog;
-        MyWebJavaInterFace(Context context,Dialog dialog){
+
+        MyWebJavaInterFace(Context context, Dialog dialog) {
             mContext = context;
             mDialog = dialog;
         }
@@ -316,9 +350,9 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
         public void closePopup() {
             // Add logic to close the popup in your Android code
             runOnUiThread(() -> {
-               if(mDialog!=null && mDialog.isShowing()){
-                   mDialog.dismiss();
-               }
+                if (mDialog != null && mDialog.isShowing()) {
+                    mDialog.dismiss();
+                }
             });
         }
     }
@@ -428,9 +462,9 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
                     model = response.body();
                     if (model != null) {
                         if (!TextUtils.isEmpty(model.getPayNowPercentage())) {
-                            if(totalOrder>2000){
-                                amountPay = (totalOrder * 25) / 100;
-                            }else{
+                            if (totalOrder > 2000) {
+                                amountPay = (totalOrder * Double.parseDouble(model.getPayNowPercentage3Tenure()) / 100);
+                            } else {
                                 amountPay = (totalOrder * Double.parseDouble(model.getPayNowPercentage()) / 100);
                             }
                             double input = Math.floor(amountPay);
@@ -447,20 +481,20 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
                                 amountPayDisabled = amountPayDisabled + 1;
                             }
                         }
-                        firstEmiAmount = (totalOrder * Double.parseDouble(model.getEmiOnePercentage()) / 100);
+                        firstEmiAmount = (totalOrder * Double.parseDouble(totalOrder > 2000 ? model.getEmiOnePercentage3Tenure() : model.getEmiOnePercentage()) / 100);
                         double input = Math.floor(firstEmiAmount);
                         double afterDecimal = firstEmiAmount - input;
-                        Log.d("SnapTitan", "afterDecimal: "+afterDecimal);
+                        Log.d("SnapTitan", "afterDecimal: " + afterDecimal);
                         if (afterDecimal > 0) {
                             firstEmiAmount = firstEmiAmount + 1;
                         }
-                        secondEmiAmount = (totalOrder * Double.parseDouble(model.getEmiSecondPercentage()) / 100);
-                        thirdEmiAmount = (totalOrder * Double.parseDouble(model.getEmiSecondPercentage()) / 100);
+                        secondEmiAmount = (totalOrder * Double.parseDouble(totalOrder > 2000 ? model.getEmiSecondPercentage3Tenure() : model.getEmiSecondPercentage()) / 100);
+                        thirdEmiAmount = (totalOrder * Double.parseDouble(model.getEmiThirdPercentage3Tenure()) / 100);
                         double secInput = Math.floor(secondEmiAmount);
                         double thirdInput = Math.floor(thirdEmiAmount);
                         double secAfterDecimal = secondEmiAmount - secInput;
                         double thirdAfterDecimal = thirdEmiAmount - thirdInput;
-                        Log.d("SnapTitan", "secAfterDecimal: "+secAfterDecimal);
+                        Log.d("SnapTitan", "secAfterDecimal: " + secAfterDecimal);
 
                         if (secAfterDecimal > 0) {
                             secondEmiAmount = secondEmiAmount + 1;
@@ -496,20 +530,20 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
                             tvFlatOffer.setText(model.getOfferPercentage());
                             ivReadMore.setVisibility(GONE);
                             tvCashbackUpTo.setText(model.getAvailableOffer().replace("T&C", ""));
-                        }else{
+                        } else {
                             ivReadMore.setVisibility(VISIBLE);
                         }
 
                     }
 
                 } catch (Exception e) {
-                    Log.e("TAG", "onFailure: "+e );
-                                    }
+                    Log.e("TAG", "onFailure: " + e);
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<EmiModel> call, @NonNull Throwable t) {
-                Log.e("TAG", "onFailure: "+t );
+                Log.e("TAG", "onFailure: " + t);
             }
         });
     }
@@ -521,7 +555,7 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
         webSettings.setUseWideViewPort(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        if(TextUtils.isEmpty(emiWidget)){
+        if (TextUtils.isEmpty(emiWidget)) {
             emiWidget = "<style>.snap_emi_txt{text-align:center;justify-content:center;width:max-content;border-radius:10.9399px;position:relative;margin-bottom:5px;background:#fff;margin-bottom:10px;cursor:pointer}.snap-emi-inst{font-family:Inter,sans-serif;font-weight:700!important;font-size:18px;line-height:16px!important;color:#000!important;padding-top:4px!important;text-align:left;letter-spacing:normal}.snap-emi-inst b{font-weight:700!important}img.info-img{position:relative!important;top:-1px!important}.snap-emi-inst img,.snap-emi-inst span,.snap-emi-slogan img,.snap-emi-slogan span{display:inline-block!important;vertical-align:middle!important}.snap-emi-inst b,.snap-emi-slogan .snap_emi_slogan_text b{font-weight:700}.snap-emi-slogan{font-family:Inter,sans-serif;font-size:12.5px!important;line-height:16px!important;padding-bottom:6px!important;letter-spacing:normal;display:flex;justify-content:space-between;align-items:center;font-weight:400;color:#090909!important}.snap_widget_powered_text img{max-width:100px!important;width:70px!important}.snap_widget_powered_text{margin-left:0;margin-bottom:0;font-size:8px;color:#000;font-weight:500}.snap_emi_txt .snap_widget_powered_text img{margin-left:4px!important}.snap_buy_now_btn{width:62px!important;max-width:90px}.snap_padding_left{padding-left:3px}.snap_grey_dot{background:rgba(52,52,52,1);width:5px;height:5px;border-radius:50%}.snap_powered_text{font-size:8px;color:#878787}.snap_upi_widget_img{width:40px;max-width:90px;margin-bottom:-2px}.snap_emi_txt .snap_text_pink{color:#d90075}</style><div id='sm-widget-btn' class='snap_emi_txt snap_emi_txt_wrapper' onclick='startPop()'><div class='snap-emi-inst'>or 3 Monthly Payments of<span class='snap_text_pink'>₹{{down_payment_price}}</span></div><div class='snap-emi-slogan'><span><span class='snap_emi_slogan_text'><b>0%</b>EMI on</span><img src='https://preemi.snapmint.com/assets/whitelable/UPI-Logo-vector%201.svg' class='snap_upi_widget_img'></span><span><span class='snap_widget_powered_text'><span class='snap_grey_dot'></span><img src='https://assets.snapmint.com/assets/merchant/snapmint_logo_black_text.svg'></span></span><div><img src='https://assets.snapmint.com/assets/merchant/view_more_pink.svg' class='snap_buy_now_btn'></div></div></div>";
         }
         // Replace placeholder with amountPay value
