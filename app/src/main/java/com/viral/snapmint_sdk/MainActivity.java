@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         SnapmintEmiInfoTitanButton snapmintEmiInfoTitanButton = findViewById(R.id.titanInfoButton);
 //        snapmintButton.showSnapmintEmiInfo("1571", "2435/snap_nnow.json", true, SnapmintConfiguration.PROD);
 //        snapmintButton.showSnapmintEmiInfo("791", "2435/snap_nnow.json", true, SnapmintConfiguration.QA);
-        snapmintEmiInfoTitanButton.showSnapmintEmiInfo("4500", "4858/snap_titan.json", true, SnapmintConfiguration.QA);
+        snapmintEmiInfoTitanButton.showSnapmintEmiInfo("4500", "4858/snap_titan.json");
         et_phone_no = findViewById(R.id.et_phone_no);
         merchantIdEdt = findViewById(R.id.et_merchant_id);
         merchantKeyEdt = findViewById(R.id.et_merchant_key);
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
         etOrderValue.setText("4500");
         btnChangeOrderValue.setOnClickListener(view -> {
             if (!TextUtils.isEmpty(etOrderValue.getText().toString())&& Integer.parseInt(etOrderValue.getText().toString()) >=200){
-                snapmintEmiInfoTitanButton.showSnapmintEmiInfo(etOrderValue.getText().toString(), "4858/snap_titan.json", true, SnapmintConfiguration.QA);
+                snapmintEmiInfoTitanButton.showSnapmintEmiInfo(etOrderValue.getText().toString(), "4858/snap_titan.json");
             }else{
                 Toast.makeText(this, "Please Select value minimum 200 or more ", Toast.LENGTH_SHORT).show();
             }
