@@ -93,6 +93,7 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
     private List<String> termsList = new ArrayList<>();
     private EmiModel model = new EmiModel();
     private int dialogHeight = 460;
+    private Context mContext;
 
     public SnapmintEmiInfoTitanButton(@NonNull Context context) {
         super(context);
@@ -109,28 +110,14 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
         init(context);
     }
 
-    public void showSnapmintEmiInfo(String orderValue, String merchantLink, boolean iEnable, String environment) {
+    public void showSnapmintEmiInfo(String orderValue, String merchantLink) {
         this.orderValue = orderValue;
         this.merchantLink = merchantLink;
-        this.isEnable = iEnable;
-        if (environment.equalsIgnoreCase(SnapmintConfiguration.QA)) {
-            SnapmintConstants.BASE_URL = SnapmintConstants.QA;
-            SnapmintConstants.CHECKOUT_BASE_URL = SnapmintConstants.QA_CHECKOUT_URL;
-        } else if (environment.equalsIgnoreCase(SnapmintConfiguration.PRE)) {
-            SnapmintConstants.BASE_URL = SnapmintConstants.PRE;
-            SnapmintConstants.CHECKOUT_BASE_URL = SnapmintConstants.PRE_CHECKOUT_URL;
-        } else if (environment.equalsIgnoreCase(SnapmintConfiguration.PROD)) {
-            SnapmintConstants.BASE_URL = SnapmintConstants.PROD;
-            SnapmintConstants.CHECKOUT_BASE_URL = SnapmintConstants.PROD_CHECKOUT_URL;
-        }
-        try {
-            getEmiInfo();
-        } catch (Exception e) {
-        }
-
+        getEmiInfo();
     }
 
     private void init(Context context) {
+        mContext = context;
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         view = LayoutInflater.from(context).inflate(R.layout.snapmint_info_layout, this, true);
         tvPayment = findViewById(R.id.tvPayment);
@@ -255,6 +242,13 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
                     } else {
                         tenureValue = (Double.parseDouble(orderValue) - amountPay) / tenureModel.getTenure();
                     }
+                    String[] tenureList = String.valueOf(tenureValue).split("\\.");
+                    if(tenureList.length>1){
+                        double pointValue = Double.parseDouble(tenureList[1]);
+                        if (pointValue > 0) {
+                            tenureValue = Double.parseDouble(tenureList[0]) + 1;
+                        }
+                    }
                     htmlContent = htmlContent.replace("{{tenure_" + tenureModel.getTenure() + "}}", String.valueOf(Math.round(tenureValue)));
                 }
             }
@@ -356,100 +350,6 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
             });
         }
     }
-/*
-    private void openSnapmintDialog(boolean isOffer, boolean isTAnC) {
-        final Dialog dialog = new Dialog(view.getContext());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dilog_snapmint);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
-        TextView txtDownpayment = dialog.findViewById(R.id.txtDownpayment);
-        TextView tvFirstEmi = dialog.findViewById(R.id.tvFirstEmi);
-        TextView tvSecondEmi = dialog.findViewById(R.id.tvSecondEmi);
-        TextView tvFirstMonth = dialog.findViewById(R.id.tvFirstMonth);
-        TextView tvSecondMonth = dialog.findViewById(R.id.tvSecondMonth);
-        TextView tvTAndC = dialog.findViewById(R.id.tvTAndC);
-        TextView tvTAndCTitle = dialog.findViewById(R.id.tvTAndCTitle);
-        TextView tvTAndCSubTitle = dialog.findViewById(R.id.tvTAndCSubTitle);
-        TextView tvFlatPercentage = dialog.findViewById(R.id.tvFlatPercentage);
-        TextView tvCashbackUpTo = dialog.findViewById(R.id.tvCashbackUpTo);
-        RelativeLayout relCross = dialog.findViewById(R.id.relCross);
-        RelativeLayout relOfferBack = dialog.findViewById(R.id.relOfferBack);
-        RelativeLayout relNonOfferBackLayout = dialog.findViewById(R.id.relNonOfferBackLayout);
-        RelativeLayout relOfferHeader = dialog.findViewById(R.id.relOfferHeader);
-        RelativeLayout relTermsView = dialog.findViewById(R.id.relTermsView);
-        ImageView ivTAndCLogo = dialog.findViewById(R.id.ivTAndCLogo);
-        LinearLayout llBackToPlans = dialog.findViewById(R.id.llBackToPlans);
-        LinearLayout llEmiPlansView = dialog.findViewById(R.id.llEmiPlansView);
-        relOfferHeader.setVisibility(isOffer && !isTAnC ? VISIBLE : GONE);
-        llEmiPlansView.setVisibility(!isTAnC ? VISIBLE : GONE);
-        relTermsView.setVisibility(isOffer && isTAnC ? VISIBLE : GONE);
-        relNonOfferBackLayout.setVisibility(!isOffer || isTAnC ? VISIBLE : GONE);
-        llBackToPlans.setVisibility(isOffer && isTAnC ? VISIBLE : GONE);
-        txtDownpayment.setText(Utility.setSingleDynamicValue(dialog.getContext(), R.string.rs_amount, String.valueOf(amountPay.intValue())));
-        if (firstEmiAmount != null)
-            tvFirstEmi.setText(Utility.setSingleDynamicValue(dialog.getContext(), R.string.rs_amount, String.valueOf(firstEmiAmount.intValue())));
-        if (secondEmiAmount != null)
-            tvSecondEmi.setText(Utility.setSingleDynamicValue(dialog.getContext(), R.string.rs_amount, String.valueOf(secondEmiAmount.intValue())));
-        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-        String nextMonth = "";
-        String secondMonth = "";
-        String outputPattern = "MMM";
-        Calendar cal = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        cal.add(Calendar.MONTH, day > 23 ? 2 : 1);
-        cal2.add(Calendar.MONTH, day > 23 ? 3 : 2);
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
-        try {
-            nextMonth = outputFormat.format(cal.getTime());
-            secondMonth = outputFormat.format(cal2.getTime());
-        } catch (Exception e) {
-        }
-        tvFirstMonth.setText(Html.fromHtml(Utility.setSingleDynamicValue(dialog.getContext(), R.string.third_month, nextMonth)));
-        tvSecondMonth.setText(Html.fromHtml(Utility.setSingleDynamicValue(dialog.getContext(), R.string.third_month, secondMonth)));
-        relCross.setOnClickListener(v -> dialog.dismiss());
-        relOfferBack.setOnClickListener(v -> dialog.dismiss());
-        if (isOffer) {
-            tvFlatPercentage.setText(model.getOfferPercentage());
-            tvTAndCTitle.setText(model.getTermsAndConditionsTitle());
-            tvTAndCSubTitle.setText(model.getTermsAndConditionsSubtitle());
-            tvCashbackUpTo.setText(model.getAvailableOffer().replace("T&C", ""));
-            if (!TextUtils.isEmpty(model.getTermsAndConditionsSnapmintLogo())) {
-                GlideToVectorYou.init().with(dialog.getContext()).load(Uri.parse(model.getTermsAndConditionsSnapmintLogo()), ivTAndCLogo);
-            }
-        }
-        tvTAndC.setOnClickListener(v -> {
-            relTermsView.setVisibility(VISIBLE);
-            relNonOfferBackLayout.setVisibility(VISIBLE);
-            llBackToPlans.setVisibility(VISIBLE);
-            relOfferHeader.setVisibility(GONE);
-            llEmiPlansView.setVisibility(GONE);
-        });
-        llBackToPlans.setOnClickListener(v -> {
-            relTermsView.setVisibility(GONE);
-            relNonOfferBackLayout.setVisibility(GONE);
-            llBackToPlans.setVisibility(GONE);
-            relOfferHeader.setVisibility(VISIBLE);
-            llEmiPlansView.setVisibility(VISIBLE);
-        });
-        if (isOffer) {
-            setTermsAndConditionList(dialog);
-        }
-
-    }
-*/
-
-    private void setTermsAndConditionList(Dialog dialog) {
-        RecyclerView recycleTAndC = dialog.findViewById(R.id.recycleTAndC);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(dialog.getContext());
-        recycleTAndC.setLayoutManager(linearLayoutManager);
-        TermsAndConditionsAdapter adapter = new TermsAndConditionsAdapter(termsList);
-        recycleTAndC.setAdapter(adapter);
-
-    }
-
 
     private void getEmiInfo() {
         double totalOrder = Double.parseDouble(orderValue);
@@ -522,10 +422,7 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
                         Glide.with(view.getContext()).load(model.getPayNowImage1PopUpDisable()).into(ivSnapmintText);
                         Glide.with(view.getContext()).load("https://assets.snapmint.com/assets/merchant/emitxt/green_dark_button.png").into(ivReadMore);
                         tvCredit.setText(model.getPayNowText3());
-//                        llEnableView.setVisibility(isEnable ? View.VISIBLE : View.GONE);
-//                        llDisableView.setVisibility(isEnable ? View.GONE : View.VISIBLE);
                         termsList = model.getOfferTermsAndConditions();
-//                        llOfferView.setVisibility(!TextUtils.isEmpty(model.getOfferPercentage()) && !TextUtils.isEmpty(model.getOfferPercentage()) ? VISIBLE : GONE);
                         if (!TextUtils.isEmpty(model.getOfferPercentage()) && !TextUtils.isEmpty(model.getAvailableOffer())) {
                             tvFlatOffer.setText(model.getOfferPercentage());
                             ivReadMore.setVisibility(GONE);
@@ -555,8 +452,12 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
         webSettings.setUseWideViewPort(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setBlockNetworkImage(false);
+        webSettings.setBlockNetworkLoads(false);
+        webSettings.setLoadsImagesAutomatically(true);
         if (TextUtils.isEmpty(emiWidget)) {
-            emiWidget = "<style>.snap_emi_txt{text-align:center;justify-content:center;width:max-content;border-radius:10.9399px;position:relative;margin-bottom:5px;background:#fff;margin-bottom:10px;cursor:pointer}.snap-emi-inst{font-family:Inter,sans-serif;font-weight:700!important;font-size:18px;line-height:16px!important;color:#000!important;padding-top:4px!important;text-align:left;letter-spacing:normal}.snap-emi-inst b{font-weight:700!important}img.info-img{position:relative!important;top:-1px!important}.snap-emi-inst img,.snap-emi-inst span,.snap-emi-slogan img,.snap-emi-slogan span{display:inline-block!important;vertical-align:middle!important}.snap-emi-inst b,.snap-emi-slogan .snap_emi_slogan_text b{font-weight:700}.snap-emi-slogan{font-family:Inter,sans-serif;font-size:12.5px!important;line-height:16px!important;padding-bottom:6px!important;letter-spacing:normal;display:flex;justify-content:space-between;align-items:center;font-weight:400;color:#090909!important}.snap_widget_powered_text img{max-width:100px!important;width:70px!important}.snap_widget_powered_text{margin-left:0;margin-bottom:0;font-size:8px;color:#000;font-weight:500}.snap_emi_txt .snap_widget_powered_text img{margin-left:4px!important}.snap_buy_now_btn{width:62px!important;max-width:90px}.snap_padding_left{padding-left:3px}.snap_grey_dot{background:rgba(52,52,52,1);width:5px;height:5px;border-radius:50%}.snap_powered_text{font-size:8px;color:#878787}.snap_upi_widget_img{width:40px;max-width:90px;margin-bottom:-2px}.snap_emi_txt .snap_text_pink{color:#d90075}</style><div id='sm-widget-btn' class='snap_emi_txt snap_emi_txt_wrapper' onclick='startPop()'><div class='snap-emi-inst'>or 3 Monthly Payments of<span class='snap_text_pink'>₹{{down_payment_price}}</span></div><div class='snap-emi-slogan'><span><span class='snap_emi_slogan_text'><b>0%</b>EMI on</span><img src='https://preemi.snapmint.com/assets/whitelable/UPI-Logo-vector%201.svg' class='snap_upi_widget_img'></span><span><span class='snap_widget_powered_text'><span class='snap_grey_dot'></span><img src='https://assets.snapmint.com/assets/merchant/snapmint_logo_black_text.svg'></span></span><div><img src='https://assets.snapmint.com/assets/merchant/view_more_pink.svg' class='snap_buy_now_btn'></div></div></div>";
+            emiWidget = loadHtmlFromAsset(mContext,"snap_emi_widget.html");
         }
         // Replace placeholder with amountPay value
         emiWidget = emiWidget.replace("{{down_payment_price}}", String.valueOf(amountPay.intValue()));
@@ -575,8 +476,16 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
                 Log.d("WebView", "Page finished loading: " + url);
             }
         });
+        String modifiedHtml = " <html>" +
+                "<head>" +
+                "<meta name='viewport' content='width=device-width, initial-scale=1'>" +
+                "</head>" +
+                "<body> " +
+                emiWidget+
+                "</body>" +
+                "</html>";
 
-        emiWebView.loadDataWithBaseURL(null, emiWidget, "text/html", "UTF-8", null);
+        emiWebView.loadDataWithBaseURL(null, modifiedHtml, "text/html", "UTF-8", null);
         emiWebView.setOnTouchListener(new OnTouchListener() {
             private float startX;
             private float startY;
@@ -604,7 +513,6 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
             }
         });
 
-        // Load HTML content into WebView
 
     }
 }
