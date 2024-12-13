@@ -1,15 +1,14 @@
 package com.snapmint.merchantsdk.components;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,7 +18,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
-import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -27,21 +25,17 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.snapmint.merchantsdk.R;
-import com.snapmint.merchantsdk.adapter.TermsAndConditionsAdapter;
 import com.snapmint.merchantsdk.api.ApiBuilder;
 import com.snapmint.merchantsdk.api.ApiServices;
-import com.snapmint.merchantsdk.constants.SnapmintConfiguration;
-import com.snapmint.merchantsdk.constants.SnapmintConstants;
 import com.snapmint.merchantsdk.models.EmiModel;
 import com.snapmint.merchantsdk.models.TenureModel;
 import com.snapmint.merchantsdk.utils.Utility;
@@ -53,7 +47,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Objects;
 import java.util.TimeZone;
 
 import retrofit2.Call;
@@ -94,6 +87,7 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
     private EmiModel model = new EmiModel();
     private int dialogHeight = 460;
     private Context mContext;
+    private WebView webView;
 
     public SnapmintEmiInfoTitanButton(@NonNull Context context) {
         super(context);
@@ -176,7 +170,8 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.dialog_snapmint_html_web_view);
 
-        WebView webView = dialog.findViewById(R.id.webView);
+        webView = dialog.findViewById(R.id.webView);
+        ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
         String nextMonth = "";
         String secondMonth = "";
@@ -214,8 +209,14 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
 
         if (webView != null) {
             // Set up WebView and load HTML content
+            webView.setLayerType(WebView.LAYER_TYPE_HARDWARE, null);
+            WebSettings webSettings = webView.getSettings();
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setUseWideViewPort(true);
+            webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
+            webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+            webSettings.setDomStorageEnabled(true);
+            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
             String htmlContent = determineEmiPopup(dialog.getContext(), orderValue);
 
             htmlContent = htmlContent.replace("{{down_payment_price}}", String.valueOf(amountPay.intValue()));
@@ -261,34 +262,12 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
                     // You can add your logic here if needed.
                     return super.shouldOverrideUrlLoading(view, request);
                 }
-
-            });
-            webView.setWebViewClient(new WebViewClient() {
                 @Override
                 public void onPageFinished(WebView view, String url) {
                     super.onPageFinished(view, url);
-                    String script = "(function() {\n" +
-                            "var modalWrapper = document.querySelector('.modal-wrpr');\n" +
-                            "        var height = modalWrapper.offsetHeight;\n" +
-                            "        return height;" +
-                            "})();";
-                    webView.evaluateJavascript(script, s -> {
-                        Log.d("TitanWeb", "webViewHeight: " + s);
-                        if (TextUtils.isDigitsOnly(s)) {
-                            int heightInPixels = (int) TypedValue.applyDimension(
-                                    TypedValue.COMPLEX_UNIT_DIP,
-                                    Integer.parseInt(s),
-                                    getResources().getDisplayMetrics()
-                            );
-
-                            // Set layout parameters with fixed height
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                                    ViewGroup.LayoutParams.MATCH_PARENT, // Match parent for width
-                                    heightInPixels                       // Fixed height in pixels
-                            );
-                            webView.setLayoutParams(params);
-                        }
-                    });
+                    progressBar.setVisibility(View.GONE);
+//                    webView.setVisibility(View.VISIBLE);
+                    fadeIn(webView);
                 }
             });
             webView.loadDataWithBaseURL(null, htmlContent, "text/html", "utf-8", null);
@@ -305,6 +284,29 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
         dialog.show();
 
     }
+
+    private void fadeIn(View view) {
+        view.setAlpha(0f);
+        view.setVisibility(View.VISIBLE);
+        view.animate()
+                .alpha(1f)
+                .setDuration(300) // Animation duration in milliseconds
+                .setListener(null);
+    }
+
+    private void fadeOut(View view, Dialog mDialog) {
+        view.animate()
+                .alpha(0f)
+                .setDuration(300)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        view.setVisibility(View.INVISIBLE);
+                        mDialog.dismiss();
+                    }
+                });
+    }
+
 
     private String determineEmiPopup(Context context, String orderValue) {
         try {
@@ -345,7 +347,7 @@ public class SnapmintEmiInfoTitanButton extends FrameLayout implements View.OnCl
             // Add logic to close the popup in your Android code
             runOnUiThread(() -> {
                 if (mDialog != null && mDialog.isShowing()) {
-                    mDialog.dismiss();
+                    fadeOut(webView,mDialog);
                 }
             });
         }
