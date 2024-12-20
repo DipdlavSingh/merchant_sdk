@@ -27,9 +27,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".snapmintsdk.SnapmintOrderCheckoutActivity"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
         <activity
             android:name=".snapmintsdk.NewCheckoutWebViewActivity"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
 
     </application>
