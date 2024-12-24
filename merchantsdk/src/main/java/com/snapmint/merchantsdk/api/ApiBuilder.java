@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.snapmint.merchantsdk.BuildConfig;
+import com.snapmint.merchantsdk.constants.ApiConstant;
 import com.snapmint.merchantsdk.constants.SnapmintConstants;
 import com.snapmint.merchantsdk.constants.SnapmintConfiguration;
 
@@ -39,6 +40,28 @@ public class ApiBuilder {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(/*SnapmintConstants.BASE_URL*/"https://merchant-js.snapmint.com/")
+                .client(client.build())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        return retrofit.create(serviceInterface);
+    }
+
+    public static <T> T createLogger(final Class<T> serviceInterface) {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient.Builder client = new OkHttpClient.Builder();
+        if (BuildConfig.DEBUG) {
+            client.addInterceptor(new CurlLoggerInterceptor("CURL"));
+        }
+        client.addInterceptor(interceptor);
+        client.connectTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
+        client.readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
+
+        Gson gson = new GsonBuilder().create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ApiConstant.LOG_BASE_URL)
                 .client(client.build())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();

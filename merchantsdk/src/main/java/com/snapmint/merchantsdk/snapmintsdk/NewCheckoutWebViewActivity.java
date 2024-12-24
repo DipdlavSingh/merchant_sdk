@@ -42,6 +42,8 @@ import com.gun0912.tedpermission.normal.TedPermission;
 import com.snapmint.merchantsdk.BuildConfig;
 import com.snapmint.merchantsdk.JSBridge.CheckoutWebViewInterface;
 import com.snapmint.merchantsdk.R;
+import com.snapmint.merchantsdk.api.ApiBuilder;
+import com.snapmint.merchantsdk.api.ApiServices;
 import com.snapmint.merchantsdk.api.CurlLoggerInterceptor;
 import com.snapmint.merchantsdk.constants.ApiConstant;
 import com.snapmint.merchantsdk.constants.SnapmintConfiguration;
@@ -55,7 +57,9 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -79,6 +83,7 @@ public class NewCheckoutWebViewActivity extends AppCompatActivity implements Che
     private final static int FILE_CHOOSER_RESULTCODE = 1;
     private String finalData;
     private String apiJson;
+    private ApiServices apiService;
 
     @SuppressLint("ObsoleteSdkInt")
     @Override
@@ -127,6 +132,7 @@ public class NewCheckoutWebViewActivity extends AppCompatActivity implements Che
 
     private void initialise() {
         callOkHttpAPi(baseUrl);
+        apiService = ApiBuilder.createLogger(ApiServices.class);
     }
 
     @SuppressLint({"SetJavaScriptEnabled", "NewApi"})
@@ -261,11 +267,13 @@ public class NewCheckoutWebViewActivity extends AppCompatActivity implements Che
                     binding.progressBar.setVisibility(View.VISIBLE);
                     (new Handler()).postDelayed(() -> {
                         if (url.contains(sucUrl)) {
+                            logMessageToServer("success redirect");
                             Intent intent = new Intent();
                             intent.putExtra(SnapmintConfiguration.STATUS, SnapmintConfiguration.SUCCESS);
                             setResult(RESULT_OK, intent);
                             finish();
                         } else if (url.contains(failUrl)) {
+                            logMessageToServer("failure redirect");
                             Intent intent = new Intent();
                             intent.putExtra(SnapmintConfiguration.STATUS, SnapmintConfiguration.FAILED);
                             setResult(RESULT_OK, intent);
@@ -461,11 +469,13 @@ public class NewCheckoutWebViewActivity extends AppCompatActivity implements Che
                     binding.progressBar.setVisibility(View.VISIBLE);
                     (new Handler()).postDelayed(() -> {
                         if (url.contains(sucUrl)) {
+                            logMessageToServer("success redirect");
                             Intent intent = new Intent();
                             intent.putExtra(SnapmintConfiguration.STATUS, SnapmintConfiguration.SUCCESS);
                             setResult(RESULT_OK, intent);
                             finish();
                         } else if (url.contains(failUrl)) {
+                            logMessageToServer("failure redirect");
                             Intent intent = new Intent();
                             intent.putExtra(SnapmintConfiguration.STATUS, SnapmintConfiguration.FAILED);
                             setResult(RESULT_OK, intent);
@@ -543,6 +553,7 @@ public class NewCheckoutWebViewActivity extends AppCompatActivity implements Che
 
     @Override
     public void handlePaymentResponse(@Nullable String code, @Nullable String message) {
+        logMessageToServer("handlePaymentResponse: " + message);
         Intent returnIntent = new Intent();
         returnIntent.putExtra("status_code", code);
         returnIntent.putExtra("status_msg", message);
@@ -568,6 +579,7 @@ public class NewCheckoutWebViewActivity extends AppCompatActivity implements Che
 
     @Override
     public void orderSuccess(String data) {
+        logMessageToServer("orderSuccess: " + data);
         Intent intent = new Intent();
         intent.putExtra(SnapmintConfiguration.STATUS, SnapmintConfiguration.SUCCESS);
         setResult(RESULT_OK, intent);
@@ -576,9 +588,31 @@ public class NewCheckoutWebViewActivity extends AppCompatActivity implements Che
 
     @Override
     public void orderFailed() {
+        logMessageToServer("closeWebView");
         Intent intent = new Intent();
         intent.putExtra(SnapmintConfiguration.STATUS, SnapmintConfiguration.FAILED);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    private void logMessageToServer(String message) {
+        try {
+            Map<String, String> payload = new HashMap<>();
+            payload.put("level", "info");
+            payload.put("message", "Android: " + message);
+            apiService.logMessage(payload).enqueue(new retrofit2.Callback<Object>() {
+                @Override
+                public void onResponse(retrofit2.Call<Object> call, retrofit2.Response<Object> response) {
+
+                }
+
+                @Override
+                public void onFailure(retrofit2.Call<Object> call, Throwable t) {
+
+                }
+            });
+        } catch (Exception e) {
+            Log.e(this.getLocalClassName(), "error sending log", e);
+        }
     }
 }
