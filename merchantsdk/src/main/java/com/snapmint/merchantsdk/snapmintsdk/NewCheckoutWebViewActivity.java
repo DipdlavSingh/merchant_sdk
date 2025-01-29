@@ -111,7 +111,7 @@ public class NewCheckoutWebViewActivity extends AppCompatActivity implements Che
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
         binding = ActivityNewCheckoutWebviewBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
