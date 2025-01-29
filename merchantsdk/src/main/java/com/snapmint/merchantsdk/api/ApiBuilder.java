@@ -31,8 +31,8 @@ public class ApiBuilder {
         OkHttpClient.Builder client = new OkHttpClient.Builder();
         if (BuildConfig.DEBUG) {
             client.addInterceptor(new CurlLoggerInterceptor("CURL"));
+            client.addInterceptor(interceptor);
         }
-        client.addInterceptor(interceptor);
         client.connectTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
         client.readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
 
@@ -53,8 +53,8 @@ public class ApiBuilder {
         OkHttpClient.Builder client = new OkHttpClient.Builder();
         if (BuildConfig.DEBUG) {
             client.addInterceptor(new CurlLoggerInterceptor("CURL"));
+            client.addInterceptor(interceptor);
         }
-        client.addInterceptor(interceptor);
         client.connectTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
         client.readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
 
