@@ -5,6 +5,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -156,6 +160,7 @@ public class NewCheckoutWebViewActivity extends AppCompatActivity implements Che
         binding.webView.setWebViewClient(new webClient());
         binding.webView.setWebChromeClient(new webChromeClient());
         binding.webView.loadUrl(url);
+        registerForContextMenu(binding.webView);
         binding.webView.setOnKeyListener((v, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
                 WebView webView = (WebView) v;
@@ -593,6 +598,28 @@ public class NewCheckoutWebViewActivity extends AppCompatActivity implements Che
         intent.putExtra(SnapmintConfiguration.STATUS, SnapmintConfiguration.FAILED);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        WebView.HitTestResult webviewHittestResult;
+        webviewHittestResult = binding.webView.getHitTestResult();
+        if (webviewHittestResult.getType() == WebView.HitTestResult.SRC_ANCHOR_TYPE ||
+                webviewHittestResult.getType() == WebView.HitTestResult.ANCHOR_TYPE) {
+            menu.setHeaderTitle("Open below url in a separate browser to mock payment");
+            menu.add(0, 2, 0, "Copy URL Address").setOnMenuItemClickListener(menuItem -> {
+                String urlLink = webviewHittestResult.getExtra();
+                ClipboardManager manager = null;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    manager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("label", urlLink);
+                    manager.setPrimaryClip(clip);
+                    Toast.makeText(this, "Copied to Clipboard", Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            });
+        }
     }
 
     private void logMessageToServer(String message) {
